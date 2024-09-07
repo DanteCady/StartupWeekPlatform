@@ -7,7 +7,7 @@ import {eventRegistrationForm} from '../../utils/formConfiguration';
 const page = () => {
   return (
     <Box>
-        <FormComponent formConfig={{eventRegistrationForm}} />
+        <FormComponent formConfig={eventRegistrationForm()} />
     </Box>
   )
 }

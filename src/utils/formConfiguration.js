@@ -38,4 +38,4 @@ export const eventRegistrationForm = () => ({
             helperText: 'Please enter your affiliation',
         }
     ],
-} )
+})
