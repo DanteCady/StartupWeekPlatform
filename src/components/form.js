@@ -6,10 +6,10 @@ import Grid  from '@mui/material/Grid2';
 const FormComponent = ({ formConfig }) => {
     return (
         <Box>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
                 {/* Loop through the fields array and render the form fields */}
                 {formConfig.fields.map((field) => (
-                    <Grid item xs={12} sm={6} key={field.name}>
+                    <Grid item xs={12} sm={6} md={4} key={field.name}>
                         <TextField
                             fullWidth
                             name={field.name} // name attribute for the form field
