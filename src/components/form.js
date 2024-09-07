@@ -25,6 +25,10 @@ const FormComponent = ({ formConfig }) => {
                             multiline={field.multiline} // multiline attribute for the form field
                             rows={field.rows} // rows attribute for the form field 
                             helperText={field.helperText} // helperText attribute for the form field
+                            sx={{
+                                width: '100%',
+                                marginTop: '1rem',
+                            }}
                         />
                 ))}
                     <Button 
