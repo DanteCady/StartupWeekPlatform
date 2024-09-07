@@ -1,5 +1,5 @@
 // Form Configuration
-export const eventRegistrationForm = {
+export const eventRegistrationForm = () => ({
     fields: [
         {
             name: 'firstName',
@@ -38,4 +38,4 @@ export const eventRegistrationForm = {
             helperText: 'Please enter your affiliation',
         }
     ],
-}; 
+} )

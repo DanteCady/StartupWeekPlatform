@@ -1,13 +1,13 @@
 import React from 'react'
 import { TextField, Button, Box, Typography } from '@mui/material';
 import FormComponent from '../../components/form';
-import formConfiguration from '../../utils/formConfiguration';
+import {eventRegistrationForm} from '../../utils/formConfiguration';
 
 
 const page = () => {
   return (
     <Box>
-        <FormComponent formConfig={{formConfiguration}} />
+        <FormComponent formConfig={{eventRegistrationForm}} />
     </Box>
   )
 }
