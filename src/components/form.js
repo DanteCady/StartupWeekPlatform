@@ -31,7 +31,7 @@ const FormComponent = ({ formConfig }) => {
                     <Button 
                     type="submit" 
                     variant="outlined" 
-                    color="success"
+                    color="#252b4e"
                     sx={{
                         marginTop: '1rem',
                         width: '15%',
