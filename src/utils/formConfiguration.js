@@ -20,7 +20,7 @@ export const eventRegistrationForm = () => ({
             helperText: 'Please enter your email',
         },
         {
-            name: 'phone',
+            name: 'phoneNumber',
             label: 'Phone Number',
             required: true,
             helperText: 'Please enter your phone number',

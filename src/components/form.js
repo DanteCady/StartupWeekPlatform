@@ -2,9 +2,20 @@ import React from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 
 // FormComponent that take props from the form config util
-const FormComponent = ({ formConfig }) => {
+const FormComponent = ({ formConfig, formState, setFormState, handleSubmit}) => {
+	
+	// Function to handle form field changes
+	const handleChange = (event) => {
+		const { name, value } = event.target; // Destructure the name and value from the event target
+		setFormState({ ...formState, [name]: value }); // Update the form state with the new value
+	};
+	
+	
 	return (
 		<Box
+			component="form"
+			onSubmit={handleSubmit} // Call the handleSubmit function on form submission
+			onChange={handleChange} // Call the handleChange function on form field changes
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',

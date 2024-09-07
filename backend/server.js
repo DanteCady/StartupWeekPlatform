@@ -3,7 +3,7 @@ require('dotenv').config(); // Load environment variables from .env file
 // ##### Dependencies ##### //
 const express = require('express'); // Express web server framework
 const cors = require('cors'); // Enable Cross-Origin Resource Sharing
-const mysql = require('mysql/promise'); // MySQL client
+const mysql = require('mysql2/promise'); // MySQL client
 const cookieParser = require('cookie-parser'); // Parse cookies in request headers
 
 // ####################### //
@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser'); // Parse cookies in request heade
 
 // ####### Create a new Express application ####### //
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002; // Set the port to the environment variable or 3002
 // ####################### //
 
 
@@ -22,22 +22,23 @@ app.use(express.json());
 app.use(cookieParser());
 // ####################### //
 
-
 // ####### MySQL Connection Pool ####### //
-const databaseConfig = mysql.createPool({
+const databasePool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
 });
 
-// Create a MySQL connection pool to handle multiple connections if needed
-const databasePool = mysql.createPool(databaseConfig); // Create a MySQL connection pool
-if (databasePool) {
-    console.log('Connected to MySQL database'); // Log successful connection
-} else { 
-    console.error('Error connecting to MySQL database'); // Log connection error
-}
+// Ensure the connection pool is properly created
+databasePool.getConnection()
+  .then(() => {
+    console.log('Database connected successfully!');
+  })
+  .catch((err) => {
+    console.error('Error connecting to the database:', err);
+    process.exit(1); // Exit the process if there's an error connecting to the database
+  });
 // ####################### //
 
 

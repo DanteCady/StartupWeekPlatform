@@ -1,13 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import FormComponent from '../../components/form';
 import { eventRegistrationForm } from '../../utils/formConfiguration';
 import { useTheme } from '@mui/material/styles';
+import { SubmitForm } from '../../hooks/submitForm';
+
 
 // Page component that renders the event registration form
 const HomePage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Form state to store the form data
+  const [formState, setFormState] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    affiliation: '',
+  });
+
+// Custom hook to submit the form data
+  const { handleSubmit } = SubmitForm(formState, setFormState);
 
   return (
     // Main container for the home page
@@ -90,7 +104,12 @@ const HomePage = () => {
         </Box>
         {/* Box component that wraps the form */}
         <Box sx={{ width: '100%' }}>
-          <FormComponent formConfig={eventRegistrationForm()} />
+          <FormComponent
+           formConfig={eventRegistrationForm()}
+           formState={formState}
+           setFormState={setFormState}
+           handleSubmit={handleSubmit}
+           />
         </Box>
       </Box>
     </Box>
