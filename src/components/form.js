@@ -14,6 +14,7 @@ const FormComponent = ({ formConfig }) => {
             width: '100%',
             height: '100%',
             padding: '2rem',
+            mt: '2rem',
         }}
         >
                 {/* Loop through the fields array and render the form fields */}
@@ -27,8 +28,15 @@ const FormComponent = ({ formConfig }) => {
                             helperText={field.helperText} // helperText attribute for the form field
                         />
                 ))}
-                    <Button type="submit" variant="outlined" color="success">
-                        <Typography variant="button">Submit</Typography>
+                    <Button 
+                    type="submit" 
+                    variant="outlined" 
+                    color="success"
+                    sx={{
+                        marginTop: '1rem',
+                        width: '15%',
+                    }}>
+                        <Typography variant="button">Subscribe</Typography>
                     </Button>
         </Box>
     );
