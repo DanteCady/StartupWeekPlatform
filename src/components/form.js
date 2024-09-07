@@ -34,9 +34,9 @@ const FormComponent = ({ formConfig }) => {
 						inputLabel: {
 							style: { color: '#fff' }, // Change label text color to white
 						},
-                        formHelperText: {
-                            style: { color: '#fff' }, // Change helper text color to white
-                        },
+						formHelperText: {
+							style: { color: '#fff' }, // Change helper text color to white
+						},
 					}}
 					sx={{
 						marginTop: '1rem',
@@ -52,14 +52,22 @@ const FormComponent = ({ formConfig }) => {
 			<Button
 				type="submit"
 				variant="outlined"
-				color="#252b4e"
 				sx={{
 					marginTop: '1rem',
 					width: '100%',
 					borderRadius: '8px',
+					borderColor: '#fff',
+					borderWidth: '2px', // Adjust border width
+					color: '#fff', // Set text color to white
+					backgroundColor: '#252b4e', // Button background color
+					boxShadow: '0 0 8px 2px rgba(255, 255, 255, 0.8)', // Glowing effect
+					'&:hover': {
+						backgroundColor: '#252b4e', // Keep the background color on hover
+						boxShadow: '0 0 15px 3px rgba(255, 255, 255, 1)', // Stronger glow on hover
+					},
 				}}
 			>
-				<Typography variant="button">Register</Typography>
+				<Typography variant="button">Register Now</Typography>
 			</Button>
 		</Box>
 	);
