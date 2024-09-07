@@ -20,6 +20,8 @@ const HomePage = () => {
     affiliation: '',
   });
 
+  const currentYear = new Date().getFullYear(); // Get the current year
+
 // Custom hook to submit the form data
   const { handleSubmit } = SubmitForm(formState, setFormState);
 
@@ -99,7 +101,7 @@ const HomePage = () => {
             Event Registration
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Register for the 2024 Rhode Island Startup Week Event
+            Register for the {currentYear} Rhode Island Startup Week Event
           </Typography>
         </Box>
         {/* Box component that wraps the form */}
