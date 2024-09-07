@@ -36,7 +36,7 @@ const FormComponent = ({ formConfig }) => {
 						formHelperText: {
 							style: { color: '#fff' }, // Change helper text color to white
 						},
-					}}
+	 				}}
 					sx={{
 						marginTop: '1rem',
 						'& .MuiInput-underline:before': {
