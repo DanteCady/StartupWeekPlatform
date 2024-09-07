@@ -11,9 +11,8 @@ const FormComponent = ({ formConfig }) => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
             height: '100%',
-            padding: '2rem',
+            width: '100%',
             mt: '2rem',
         }}
         >
@@ -34,9 +33,10 @@ const FormComponent = ({ formConfig }) => {
                     color="#252b4e"
                     sx={{
                         marginTop: '1rem',
-                        width: '15%',
+                        width: '100%',
+                        borderRadius: '8px',
                     }}>
-                        <Typography variant="button">Subscribe</Typography>
+                        <Typography variant="button">Register</Typography>
                     </Button>
         </Box>
     );

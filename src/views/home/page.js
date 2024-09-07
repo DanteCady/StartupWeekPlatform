@@ -4,33 +4,50 @@ import FormComponent from '../../components/form';
 import { eventRegistrationForm } from '../../utils/formConfiguration';
 
 const page = () => {
-	return (
-		<>
-        {/* Main page container*/}
-			<Box
-				sx={{
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-					width: '100%',
-					backgroundColor: '#252b4e',
-					height: '80px',
-				}}
-			>
-                {/* Form container */}
-				<Box
-					sx={{
-						display: 'flex',
-						float: 'left',
-					}}
-				>
-                    {/* Form component with props passed from event registration form*/}
-					<FormComponent formConfig={eventRegistrationForm()} />
-				</Box>
-			</Box>
-		</>
-	);
+  return (
+    // Main container for the page
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start', 
+        justifyContent: 'flex-start',
+        width: '100%',
+        height: '100%',
+        mt: '2rem',
+        position: 'relative', 
+      }}
+    >
+      {/* Box component that wraps the form */}
+      <Box 
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          width: '100%',
+          maxWidth: '400px',
+          padding: '2rem',
+          border: '1px solid #252b4e',
+          borderRadius: '8px',
+          position: 'relative',
+          left: '-300px',
+          mt: '2rem',
+        }}
+      >
+        <Typography variant="h5" gutterBottom>
+          Event Registration
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Register for the 2024 Rhode Island Startup Week Event
+        </Typography>
+        <Box sx={{ width: '100%' }}>
+          {/* FormComponent that takes the formConfig as props */}
+          <FormComponent formConfig={eventRegistrationForm()} />
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 export default page;
