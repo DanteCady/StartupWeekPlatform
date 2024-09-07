@@ -12,12 +12,12 @@ const FormComponent = ({ formConfig }) => {
                     <Grid item xs={12} sm={6} key={field.name}>
                         <TextField
                             fullWidth
-                            name={field.name}
-                            label={field.label}
-                            required={field.required}
-                            multiline={field.multiline}
-                            rows={field.rows}
-                            helperText={field.helperText}
+                            name={field.name} // name attribute for the form field
+                            label={field.label} // label for the form field
+                            required={field.required} // required attribute for the form field
+                            multiline={field.multiline} // multiline attribute for the form field
+                            rows={field.rows} // rows attribute for the form field 
+                            helperText={field.helperText} // helperText attribute for the form field
                         />
                     </Grid>
                 ))}
