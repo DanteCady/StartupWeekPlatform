@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { Grid } from '@mui/material/Grid2';
+import Grid  from '@mui/material/Grid2';
 
 // FormComponent that take props from the form config util
 const FormComponent = ({ formConfig }) => {
