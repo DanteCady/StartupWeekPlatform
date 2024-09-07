@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box } from '@mui/material';
-import Logo from '../assets/2024-RI-startup-week-logo.png';
 
 const Header = () => {
   return (
