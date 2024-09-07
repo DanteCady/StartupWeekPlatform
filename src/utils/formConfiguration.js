@@ -26,12 +26,6 @@ export const eventRegistrationForm = () => ({
             helperText: 'Please enter your phone number',
         },
         {
-            name: 'event',
-            label: 'Event',
-            required: true,
-            helperText: 'Please enter the event name',
-        },
-        {
             name: 'affiliation',
             label: 'Affiliation',
             required: false,
