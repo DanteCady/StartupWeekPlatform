@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, IconButton, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { BookmarkIcon, ViewListIcon, ViewModuleIcon, ShareIcon } from '../../assets/icons';
+import { Box, Typography, Card, CardContent, CardMedia, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { BookmarkIcon, ShareIcon, ViewListIcon, ViewModuleIcon, ViewModuleOutlinedIcon, ViewListOutlinedIcon } from '../../assets/icons';
 import { events } from  '../../constants/index';
 
 const Events = () => {
@@ -20,13 +20,43 @@ const Events = () => {
         value={view}
         exclusive
         onChange={handleViewChange}
-        sx={{ marginBottom: 2 }}
+        sx={{ 
+            marginBottom: 2,
+            display: 'flex',
+            justifyContent: 'flex-end',
+        }}
       >
-        <ToggleButton value="list">
-          <ViewListIcon />
+        <ToggleButton 
+          value="list"
+          sx={{
+            color: view === 'list' ? '#f98053' : '#252b4e',
+            borderColor: 'transparent',
+            '&.Mui-selected': {
+              backgroundColor: 'transparent', // Disable default MUI background
+            },
+          }}
+        >
+          {view === 'list' ? (
+            <ViewListOutlinedIcon sx={{ color: '#f98053' }} />
+          ) : (
+            <ViewListIcon sx={{ color: '#252b4e' }} />
+          )}
         </ToggleButton>
-        <ToggleButton value="grid">
-          <ViewModuleIcon />
+        <ToggleButton 
+          value="grid"
+          sx={{
+            color: view === 'grid' ? '#f98053' : '#252b4e',
+            borderColor: 'transparent',
+            '&.Mui-selected': {
+              backgroundColor: 'transparent', // Disable default MUI background
+            },
+          }}
+        >
+          {view === 'grid' ? (
+            <ViewModuleOutlinedIcon sx={{ color: '#f98053' }} />
+          ) : (
+            <ViewModuleIcon sx={{ color: '#252b4e' }} />
+          )}
         </ToggleButton>
       </ToggleButtonGroup>
 
