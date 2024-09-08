@@ -8,7 +8,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
 import ViewListOutlinedIcon from '@mui/icons-material/ViewListOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 export {
     CloseIcon,
     InsertInvitationIcon,
@@ -19,5 +19,6 @@ export {
     ViewModuleIcon,
     ViewModuleOutlinedIcon,
     ViewListOutlinedIcon,
-    MenuIcon
+    MenuIcon,
+    BookmarkBorderOutlinedIcon
 }

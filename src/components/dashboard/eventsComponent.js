@@ -10,7 +10,7 @@ import {
 	ToggleButton,
 } from '@mui/material';
 import {
-	BookmarkIcon,
+	BookmarkBorderOutlinedIcon,
 	ShareIcon,
 	ViewListIcon,
 	ViewModuleIcon,
@@ -123,15 +123,20 @@ const Events = () => {
 							width: view === 'list' ? '100%' : isMobile ? '100%' : '30%', // Full width on mobile
 						}}
 					>
-						<CardMedia
+						{/* <CardMedia
 							component="img"
-							image={event.image_url}
 							alt={event.title}
 							sx={{ width: view === 'list' ? 200 : '100%', height: 200 }}
-						/>
+						/> */}
 						<CardContent>
 							<Typography variant="h6">{event.title}</Typography>
-							<Typography variant="body2" color="text.secondary" gutterBottom>
+                            <hr />
+							<Typography 
+                            variant="body2" 
+                            color="text.secondary" 
+                            gutterBottom
+                            sx={{marginTop: 1, lineHeight: 2}}
+                            >
 								{event.description}
 							</Typography>
 							<Typography variant="body2" color="text.secondary">
@@ -139,10 +144,10 @@ const Events = () => {
 							</Typography>
 							<Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
 								<IconButton>
-									<BookmarkIcon />
+									<BookmarkBorderOutlinedIcon sx={{color: '#252b4e'}} />
 								</IconButton>
 								<IconButton>
-									<ShareIcon />
+									<ShareIcon sx={{color: '#252b4e'}} />
 								</IconButton>
 							</Box>
 						</CardContent>
