@@ -21,7 +21,7 @@ function App() {
 					}
 				/>
 				<Route
-					path="/dashboard"
+					path="/events"
 					element={
 						<Layout>
 							<Dashboard />

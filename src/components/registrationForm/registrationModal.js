@@ -15,7 +15,7 @@ const RegistrationModal = ({ open, onClose, registrationID }) => {
 	// Function to handle close and navigate to dashboard
 	const handleClose = () => {
 		onClose();
-		navigate('/dashboard'); // Navigate to '/dashboard'
+		navigate('/events'); // Navigate to '/dashboard'
 	};
 
 	return (
