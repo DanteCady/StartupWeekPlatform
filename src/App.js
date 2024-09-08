@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Views
 import Home from './views/home/page';
+import Dashboard from './views/dashboard/page';
 
 //gloabl layout
 import Layout from './components/layout';
@@ -16,6 +17,14 @@ function App() {
 					element={
 						<Layout>
 							<Home />
+						</Layout>
+					}
+				/>
+				<Route
+					path="/dashboard"
+					element={
+						<Layout>
+							<Dashboard />
 						</Layout>
 					}
 				/>

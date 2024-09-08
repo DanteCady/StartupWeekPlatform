@@ -50,7 +50,7 @@ const RegistrationModal = ({ open, onClose, registrationID }) => {
           variant="caption"
           sx={{ marginTop: '0.5rem', display: 'block', color: 'gray', fontSize: '0.75rem' }}
         >
-          Please copy your registration ID. You will need it to access the events portal.
+          Please copy and save your registration ID. You will need it to access the events portal in the future.
         </Typography>
       </Box>
     </Modal>
