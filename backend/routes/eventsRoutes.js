@@ -11,6 +11,8 @@ module.exports = (databasePool) => {
 	// Register for an event
 	router.post('/register', registerForEvent);
 
+	// Check-in to an event
+	router.post('/checkin', checkInToEvent);
 	// ################ Route Handlers ################ //
 	// ############################################ //
 	// Get all events
@@ -29,9 +31,7 @@ module.exports = (databasePool) => {
 		const { eventId, registrantId } = req.body; // Get eventId and registrationId from the request body
 
 		if (!eventId || !registrantId) {
-			return res
-				.status(400)
-				.json({ error: 'Missing eventId or registrantId' }); // Validate input
+			return res.status(400).json({ error: 'Missing eventId or registrantId' }); // Validate input
 		}
 
 		try {
@@ -46,6 +46,34 @@ module.exports = (databasePool) => {
 			res.status(500).json({ error: 'Error registering for the event' }); // Send error response
 		}
 	}
+
+	// Check-in to an event
+async function checkInToEvent(req, res) {
+    const { eventId, registrantId } = req.body; // Get eventId and registrationId from the request body
+
+    if (!eventId || !registrantId) {
+        return res.status(400).json({ error: 'Missing eventId or registrantId' }); // Validate input
+    }
+
+    try {
+        // Check if the user has already checked in for this event
+        const checkQuery = 'SELECT * FROM events_checkins WHERE eventId = ? AND registrantId = ?';
+        const [existingCheckIn] = await databasePool.query(checkQuery, [eventId, registrantId]);
+
+        if (existingCheckIn.length > 0) {
+            return res.status(400).json({ error: 'User has already checked in for this event' });
+        }
+
+        // Insert the check-in details into the 'event_checkins' table
+        const insertQuery = 'INSERT INTO events_checkins (eventId, registrantId, checkInTime) VALUES (?, ?, NOW())';
+        await databasePool.query(insertQuery, [eventId, registrantId]);
+
+        res.status(201).json({ message: 'Check-in successful' }); // Send success response
+    } catch (error) {
+        console.error('Error during check-in:', error); // Log the error
+        res.status(500).json({ error: 'Error during check-in' }); // Send error response
+    }
+}
 
 	return router; // Return the router object
 };
