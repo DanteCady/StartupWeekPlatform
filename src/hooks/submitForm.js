@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 // Custom hook to submit the form data
@@ -20,7 +19,8 @@ export const SubmitForm = (formState, setFormState) => {
 
             // Check the response status
             if (response.status === 200) {
-                // If the response is OK, reset the form state
+                const registrationID = response.data.registrationID; // Capture the registrationID from the response
+                // Reset the form state if successful
                 setFormState({
                     firstName: '',
                     lastName: '',
@@ -28,18 +28,15 @@ export const SubmitForm = (formState, setFormState) => {
                     phoneNumber: '',
                     affiliation: '',
                 });
-                alert('Form submitted successfully!'); // Show success message
+                return { success: true, registrationID }; // Return success and the registrationID
             } else {
-                alert('Form submission failed. Please try again.'); // Show error message
+                return { success: false, error: 'Form submission failed. Please try again.' }; // Return failure message
             }
         } catch (error) {
             console.error('Error submitting form:', error); // Log the error
-            alert('An error occurred. Please try again.'); // Show error message
+            return { success: false, error: 'An error occurred. Please try again.' }; // Return error message
         }
     };
 
     return { handleSubmit }; // Return the handleSubmit function
-
 };
-
-
