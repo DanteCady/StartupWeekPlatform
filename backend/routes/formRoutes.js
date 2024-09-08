@@ -16,7 +16,7 @@ module.exports = (databasePool) => {
             const registrationIdNumber = Math.floor(Math.random() * 10000);
             const registrationID = `RSW-${firstName[0]}${lastName[0]}-${registrationIdNumber}`;
     
-            const query = 'INSERT INTO event_registrations (registrationId, firstName, lastName, email, phoneNumber, affiliation, createdAt) VALUES (?, ?, ?, ?, ? ,?, NOW())';
+            const query = 'INSERT INTO registrations (registrationId, firstName, lastName, email, phoneNumber, affiliation, createdAt) VALUES (?, ?, ?, ?, ? ,?, NOW())';
             const [result] = await databasePool.query(query, [registrationID, firstName, lastName, email, phoneNumber, affiliation]);
             
             // Send the registration ID back to the client
