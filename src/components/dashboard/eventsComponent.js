@@ -8,7 +8,7 @@ import {
 	ToggleButtonGroup,
 	ToggleButton,
 	CircularProgress,
-	Button
+	Button,
 } from '@mui/material';
 import {
 	BookmarkBorderOutlinedIcon,
@@ -23,7 +23,6 @@ import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
 import RegistrationModal from '../global/modal';
 import useEventRegistration from '../../hooks/eventRegistration';
-
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
@@ -164,8 +163,16 @@ const Events = () => {
 				}}
 			>
 				{events.map((event) => {
+					// Get current date and time
+					const currentDateTime = new Date();
+					// Get event date and time combined into a single Date object
+					const eventDateTime = new Date(`${event.date}T${event.time}`);
+
+					// Check if the event has started
+					const hasEventStarted = currentDateTime >= eventDateTime;
+
 					// Construct the registration URL for the event
-					const registrationUrl = `http://localhost:3000/register?eventId=${event.id}`;
+					const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
 
 					return (
 						<Card
@@ -204,68 +211,72 @@ const Events = () => {
 									</Typography>
 								</Box>
 
-								{/* QR code section */}
-								{/* <Box
-									sx={{
-										marginTop: 3,
-										display: 'flex',
-										justifyContent: 'space-between',
-										alignItems: 'center',
-									}}
-								>
+								{/* Conditionally show the register button or QR code */}
+								{hasEventStarted ? (
 									<Box
 										sx={{
-											height: 50,
-											width: 50,
+											marginTop: 2,
 											display: 'flex',
-											justifyContent: 'center',
+											flexDirection: 'column',
 											alignItems: 'center',
 										}}
 									>
-										<QRCode value={registrationUrl} />
+										<Typography variant="body1" color="primary" sx={{ marginBottom: 1 }}>
+											Event Started, Check In now
+										</Typography>
+										<Box
+											sx={{
+												height: 80,
+												width: 80,
+												display: 'flex',
+												justifyContent: 'center',
+												alignItems: 'center',
+											}}
+										>
+											<QRCode value={registrationUrl} />
+										</Box>
 									</Box>
-									
-								</Box> */}
-
-								{/* Register Button */}
-								<Box
-									sx={{
-										marginTop: 2,
-										display: 'flex',
-										justifyContent: 'center',
-									}}
-								>
-									<Button
-										variant="contained"
-										color="primary"
-										onClick={() => handleOpenRegisterModal(event.eventId)}
+								) : (
+									<Box
 										sx={{
-											backgroundColor: '#f98053',
-											'&:hover': {
-												backgroundColor: '#f55c23',
-											},
+											marginTop: 2,
+											display: 'flex',
+											justifyContent: 'center',
 										}}
 									>
-										Register for Event
-									</Button>
-                              
-								</Box>
-                                {/* Bookmark and Share Icons */}
-                                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'right'}}>
-										<IconButton>
-											<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-										</IconButton>
-										<IconButton>
-											<ShareIcon sx={{ color: '#252b4e' }} />
-										</IconButton>
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={() => handleOpenRegisterModal(event.eventId)}
+											sx={{
+												backgroundColor: '#f98053',
+												'&:hover': {
+													backgroundColor: '#f55c23',
+												},
+											}}
+										>
+											Register for Event
+										</Button>
 									</Box>
+								)}
+
+								{/* Bookmark and Share Icons */}
+								<Box sx={{ display: 'flex', gap: 1, justifyContent: 'right' }}>
+									<IconButton>
+										<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+									</IconButton>
+									<IconButton>
+										<ShareIcon sx={{ color: '#252b4e' }} />
+									</IconButton>
+								</Box>
 							</CardContent>
 						</Card>
 					);
 				})}
 			</Box>
-				{/* Modal */}
-				<RegistrationModal
+
+			{/* Modal */}
+			<RegistrationModal
 				open={openModal}
 				onClose={() => setOpenModal(false)}
 				mode={modalMode}

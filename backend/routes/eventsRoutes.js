@@ -16,15 +16,18 @@ module.exports = (databasePool) => {
 	// ################ Route Handlers ################ //
 	// ############################################ //
 	// Get all events
-	async function getAllEvents(req, res) {
-		try {
-			const query = 'SELECT * FROM events'; // Define the query
-			const [events] = await databasePool.query(query); // Execute the query
-			res.status(200).json(events); // Send the events data back to the client
-		} catch (error) {
-			res.status(500).json({ error: 'Error fetching events' }); // Send an error response
-		}
-	}
+    async function getAllEvents(req, res) {
+        try {
+            // Update the query to sort by date and time in ascending order
+            const query = 'SELECT * FROM events ORDER BY date ASC, time ASC';
+            const [events] = await databasePool.query(query); // Execute the query
+            res.status(200).json(events); // Send the events data back to the client
+        } catch (error) {
+            console.error('Error fetching events:', error); // Log the error
+            res.status(500).json({ error: 'Error fetching events' }); // Send an error response
+        }
+    }
+    
 
 	// Register for an event
     async function registerForEvent(req, res) {
