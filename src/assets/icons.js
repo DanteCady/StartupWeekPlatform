@@ -7,6 +7,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
 import ViewListOutlinedIcon from '@mui/icons-material/ViewListOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export {
     CloseIcon,
@@ -18,4 +19,5 @@ export {
     ViewModuleIcon,
     ViewModuleOutlinedIcon,
     ViewListOutlinedIcon,
+    MenuIcon
 }

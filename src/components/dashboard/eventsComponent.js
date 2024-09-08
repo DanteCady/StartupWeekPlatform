@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { BookmarkIcon, ShareIcon, ViewListIcon, ViewModuleIcon, ViewModuleOutlinedIcon, ViewListOutlinedIcon } from '../../assets/icons';
 import { events } from  '../../constants/index';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 const Events = () => {
   const [view, setView] = useState('list'); // State to toggle between list and grid view
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
 
   // Handle view change (list or grid)
   const handleViewChange = (event, newView) => {
@@ -20,7 +23,7 @@ const Events = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         overflow: 'hidden',
-        }}>
+    }}>
       {/* Buttons to switch between List View and Grid View */}
       <ToggleButtonGroup
         value={view}
@@ -82,7 +85,7 @@ const Events = () => {
               display: view === 'list' ? 'flex' : 'block',
               flexDirection: 'row',
               gap: 2,
-              width: view === 'list' ? '100%' : '30%',
+              width: view === 'list' ? '100%' : isMobile ? '100%' : '30%', // Full width on mobile
             }}
           >
             <CardMedia
