@@ -4,11 +4,10 @@ import {
 	Typography,
 	Card,
 	CardContent,
-	CardMedia,
 	IconButton,
 	ToggleButtonGroup,
 	ToggleButton,
-    CircularProgress
+	CircularProgress,
 } from '@mui/material';
 import {
 	BookmarkBorderOutlinedIcon,
@@ -18,15 +17,15 @@ import {
 	ViewModuleOutlinedIcon,
 	ViewListOutlinedIcon,
 } from '../../assets/icons';
-// import { events } from '../../constants/index';
 import { useMediaQuery, useTheme } from '@mui/material';
-import {useFetchEvents} from '../../hooks/fetchEvents';
+import { useFetchEvents } from '../../hooks/fetchEvents';
+import QRCode from '../../components/dashboard/qr';
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
-    const { events, loading, error } = useFetchEvents(); // Use custom hook to fetch events
+	const { events, loading, error } = useFetchEvents(); // Use custom hook to fetch events
 
 	// Handle view change (list or grid)
 	const handleViewChange = (event, newView) => {
@@ -35,24 +34,28 @@ const Events = () => {
 		}
 	};
 
-  // Show loading spinner while fetching events
-  if (loading) {
-    return <CircularProgress />;
-  }
+	// Show loading spinner while fetching events
+	if (loading) {
+		return <CircularProgress />;
+	}
 
-  // Show a message when no events are available
-  if (!loading && events.length === 0) {
-    return (
-      <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', marginTop: 2 }}>
-        No events scheduled at this time.
-      </Typography>
-    );
-  }
+	// Show a message when no events are available
+	if (!loading && events.length === 0) {
+		return (
+			<Typography
+				variant="h6"
+				color="textSecondary"
+				sx={{ textAlign: 'center', marginTop: 2 }}
+			>
+				No events scheduled at this time.
+			</Typography>
+		);
+	}
 
-  // Show error message if something went wrong
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
+	// Show error message if something went wrong
+	if (error) {
+		return <Typography color="error">{error}</Typography>;
+	}
 
 	return (
 		<Box
@@ -65,7 +68,6 @@ const Events = () => {
 			}}
 		>
 			{/* Buttons to switch between List View and Grid View */}
-
 			<ToggleButtonGroup
 				value={view}
 				exclusive
@@ -82,7 +84,7 @@ const Events = () => {
 						color: view === 'list' ? '#f98053' : '#252b4e',
 						borderColor: 'transparent',
 						'&.Mui-selected': {
-							backgroundColor: 'transparent', // Disable default MUI background
+							backgroundColor: 'transparent',
 						},
 					}}
 				>
@@ -93,8 +95,8 @@ const Events = () => {
 					)}
 					<Typography
 						sx={{
-							color: view === 'list' ? '#f98053' : '#252b4e', // Match color of text to icon
-                            fontWeight: 'bold',
+							color: view === 'list' ? '#f98053' : '#252b4e',
+							fontWeight: 'bold',
 						}}
 					>
 						List
@@ -107,7 +109,7 @@ const Events = () => {
 						color: view === 'grid' ? '#f98053' : '#252b4e',
 						borderColor: 'transparent',
 						'&.Mui-selected': {
-							backgroundColor: 'transparent', // Disable default MUI background
+							backgroundColor: 'transparent',
 						},
 					}}
 				>
@@ -118,14 +120,15 @@ const Events = () => {
 					)}
 					<Typography
 						sx={{
-							color: view === 'grid' ? '#f98053' : '#252b4e', // Match color of text to icon
-                            fontWeight: 'bold',
+							color: view === 'grid' ? '#f98053' : '#252b4e',
+							fontWeight: 'bold',
 						}}
 					>
 						Grid
 					</Typography>
 				</ToggleButton>
 			</ToggleButtonGroup>
+
 			{/* Conditional rendering based on the view */}
 			<Box
 				sx={{
@@ -135,46 +138,81 @@ const Events = () => {
 					flexWrap: 'wrap',
 				}}
 			>
-				{events.map((event) => (
-					<Card
-						key={event.id}
-						sx={{
-							display: view === 'list' ? 'flex' : 'block',
-							flexDirection: 'row',
-							gap: 2,
-							width: view === 'list' ? '100%' : isMobile ? '100%' : '30%', // Full width on mobile
-						}}
-					>
-						{/* <CardMedia
-							component="img"
-							alt={event.title}
-							sx={{ width: view === 'list' ? 200 : '100%', height: 200 }}
-						/> */}
-						<CardContent>
-							<Typography variant="h6">{event.title}</Typography>
-                            <hr />
-							<Typography 
-                            variant="body2" 
-                            color="text.secondary" 
-                            gutterBottom
-                            sx={{marginTop: 1, lineHeight: 2}}
+				{events.map((event) => {
+					// Construct the registration URL for the event
+					const registrationUrl = `http://localhost:3000/register?eventId=${event.id}`;
+
+					return (
+                        <Card
+                        key={event.id}
+                        sx={{
+                            display: view === 'list' ? 'flex' : 'block',
+                            flexDirection: view === 'list' ? 'row' : 'column',
+                            gap: 2,
+                            width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
+                            height: '100%', // Ensure card takes full height in grid view
+                            justifyContent: 'space-between', // Space out content in grid view
+                        }}
+                    >
+                        <CardContent
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                height: '100%',
+                            }}
+                        >
+                            {/* Title and description section */}
+                            <Box>
+                                <Typography variant="h6">{event.title}</Typography>
+                                <hr />
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    gutterBottom
+                                    sx={{ marginTop: 1, lineHeight: 2 }}
+                                >
+                                    {event.description}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {new Date(event.date).toLocaleDateString()} at {event.time}
+                                </Typography>
+                            </Box>
+                    
+                            {/* QR code and icons section */}
+                            <Box
+                                sx={{
+                                    marginTop: 3,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
                             >
-								{event.description}
-							</Typography>
-							<Typography variant="body2" color="text.secondary">
-								{new Date(event.date).toLocaleDateString()} at {event.time}
-							</Typography>
-							<Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
-								<IconButton>
-									<BookmarkBorderOutlinedIcon sx={{color: '#252b4e'}} />
-								</IconButton>
-								<IconButton>
-									<ShareIcon sx={{color: '#252b4e'}} />
-								</IconButton>
-							</Box>
-						</CardContent>
-					</Card>
-				))}
+                                <Box
+                                    sx={{
+                                        height: 50,
+                                        width: 50,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <QRCode value={registrationUrl} />
+                                </Box>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                    <IconButton>
+                                        <BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+                                    </IconButton>
+                                    <IconButton>
+                                        <ShareIcon sx={{ color: '#252b4e' }} />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                    
+					);
+				})}
 			</Box>
 		</Box>
 	);
