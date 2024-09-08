@@ -15,7 +15,7 @@ const Events = () => {
 
   return (
     <Box sx={{ 
-        padding: 2,
+        padding: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
