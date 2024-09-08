@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, IconButton, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import ShareIcon from '@mui/icons-material/Share';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import { BookmarkIcon, ViewListIcon, ViewModuleIcon, ShareIcon } from '../../assets/icons';
 import { events } from  '../../constants/index';
 
 const Events = () => {
