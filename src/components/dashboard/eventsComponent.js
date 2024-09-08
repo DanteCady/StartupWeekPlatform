@@ -8,6 +8,7 @@ import {
 	IconButton,
 	ToggleButtonGroup,
 	ToggleButton,
+    CircularProgress
 } from '@mui/material';
 import {
 	BookmarkBorderOutlinedIcon,
@@ -17,13 +18,15 @@ import {
 	ViewModuleOutlinedIcon,
 	ViewListOutlinedIcon,
 } from '../../assets/icons';
-import { events } from '../../constants/index';
+// import { events } from '../../constants/index';
 import { useMediaQuery, useTheme } from '@mui/material';
+import {useFetchEvents} from '../../hooks/fetchEvents';
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
+    const { events, loading, error } = useFetchEvents(); // Use custom hook to fetch events
 
 	// Handle view change (list or grid)
 	const handleViewChange = (event, newView) => {
@@ -31,6 +34,25 @@ const Events = () => {
 			setView(newView);
 		}
 	};
+
+  // Show loading spinner while fetching events
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  // Show a message when no events are available
+  if (!loading && events.length === 0) {
+    return (
+      <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', marginTop: 2 }}>
+        No events scheduled at this time.
+      </Typography>
+    );
+  }
+
+  // Show error message if something went wrong
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
 	return (
 		<Box

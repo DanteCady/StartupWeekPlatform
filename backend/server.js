@@ -44,10 +44,10 @@ databasePool.getConnection()
 
 // ####### Routes ####### //
 const formRoutes = require('./routes/formRoutes')(databasePool); // Import form routes and pass the database pool
-
+const eventsRoutes = require('./routes/eventsRoutes')(databasePool); // Import events routes and pass the database pool
 // Use routes
 app.use('/v1/api/form', formRoutes); // Use the form routes for the '/v1/api/form' endpoint
-
+app.use('/v1/api/events', eventsRoutes); // Use the events routes for the '/v1/api/events' endpoint
 // ####################### //
 
 // ####### Start the server ####### //
