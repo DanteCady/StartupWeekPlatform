@@ -7,7 +7,7 @@ module.exports = (databasePool) => {
 	// ############################################ //
 
 	// Submit form data
-	router.get('/submit', submitFormRegistration);
+	router.post('/submit', submitFormRegistration);
 
 	// ################ Route Handlers ################ //
 	// ############################################ //
