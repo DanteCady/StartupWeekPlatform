@@ -8,7 +8,7 @@ const DashboardPage = ({ registrationId }) => {
 		<div>
 			<Typography variant='h4'>Events</Typography>
 			<DashboardSideBar />
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                 <Events />
             </Box>
 		</div>

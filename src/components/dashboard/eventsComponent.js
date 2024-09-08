@@ -14,7 +14,13 @@ const Events = () => {
   };
 
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box sx={{ 
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        }}>
       {/* Buttons to switch between List View and Grid View */}
       <ToggleButtonGroup
         value={view}
