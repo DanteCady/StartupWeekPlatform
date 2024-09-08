@@ -143,74 +143,73 @@ const Events = () => {
 					const registrationUrl = `http://localhost:3000/register?eventId=${event.id}`;
 
 					return (
-                        <Card
-                        key={event.id}
-                        sx={{
-                            display: view === 'list' ? 'flex' : 'block',
-                            flexDirection: view === 'list' ? 'row' : 'column',
-                            gap: 2,
-                            width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
-                            height: '100%', // Ensure card takes full height in grid view
-                            justifyContent: 'space-between', // Space out content in grid view
-                        }}
-                    >
-                        <CardContent
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                height: '100%',
-                            }}
-                        >
-                            {/* Title and description section */}
-                            <Box>
-                                <Typography variant="h6">{event.title}</Typography>
-                                <hr />
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    gutterBottom
-                                    sx={{ marginTop: 1, lineHeight: 2 }}
-                                >
-                                    {event.description}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {new Date(event.date).toLocaleDateString()} at {event.time}
-                                </Typography>
-                            </Box>
-                    
-                            {/* QR code and icons section */}
-                            <Box
-                                sx={{
-                                    marginTop: 3,
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        height: 50,
-                                        width: 50,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <QRCode value={registrationUrl} />
-                                </Box>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton>
-                                        <BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-                                    </IconButton>
-                                    <IconButton>
-                                        <ShareIcon sx={{ color: '#252b4e' }} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                    
+						<Card
+							key={event.id}
+							sx={{
+								display: view === 'list' ? 'flex' : 'block',
+								flexDirection: view === 'list' ? 'row' : 'column',
+								gap: 2,
+								width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
+								height: '100%', // Ensure card takes full height in grid view
+								justifyContent: 'space-between', // Space out content in grid view
+							}}
+						>
+							<CardContent
+								sx={{
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'space-between',
+									height: '100%',
+								}}
+							>
+								{/* Title and description section */}
+								<Box>
+									<Typography variant="h6">{event.title}</Typography>
+									<hr />
+									<Typography
+										variant="body2"
+										color="text.secondary"
+										gutterBottom
+										sx={{ marginTop: 1, lineHeight: 2 }}
+									>
+										{event.description}
+									</Typography>
+									<Typography variant="body2" color="text.secondary">
+										{new Date(event.date).toLocaleDateString()} at {event.time}
+									</Typography>
+								</Box>
+
+								{/* QR code and icons section */}
+								<Box
+									sx={{
+										marginTop: 3,
+										display: 'flex',
+										justifyContent: 'space-between',
+										alignItems: 'center',
+									}}
+								>
+									<Box
+										sx={{
+											height: 50,
+											width: 50,
+											display: 'flex',
+											justifyContent: 'center',
+											alignItems: 'center',
+										}}
+									>
+										<QRCode value={registrationUrl} />
+									</Box>
+									<Box sx={{ display: 'flex', gap: 1 }}>
+										<IconButton>
+											<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+										</IconButton>
+										<IconButton>
+											<ShareIcon sx={{ color: '#252b4e' }} />
+										</IconButton>
+									</Box>
+								</Box>
+							</CardContent>
+						</Card>
 					);
 				})}
 			</Box>

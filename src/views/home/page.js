@@ -4,7 +4,7 @@ import FormComponent from '../../components/registrationForm/form';
 import { eventRegistrationForm } from '../../utils/formConfiguration';
 import { useTheme } from '@mui/material/styles';
 import { SubmitForm } from '../../hooks/submitForm';
-import RegistrationModal from '../../components/registrationForm/registrationModal';
+import RegistrationModal from '../../components/global/modal';
 
 // Page component that renders the event registration form
 const HomePage = () => {
