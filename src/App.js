@@ -6,7 +6,7 @@ import Home from './views/home/page';
 import Dashboard from './views/dashboard/page';
 
 //gloabl layout
-import Layout from './components/layout';
+import Layout from './components/global/layout';
 
 function App() {
 	return (
