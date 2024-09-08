@@ -8,6 +8,7 @@ import {
 	ToggleButtonGroup,
 	ToggleButton,
 	CircularProgress,
+	Button
 } from '@mui/material';
 import {
 	BookmarkBorderOutlinedIcon,
@@ -20,12 +21,29 @@ import {
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
+import RegistrationModal from '../global/modal';
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
 	const { events, loading, error } = useFetchEvents(); // Use custom hook to fetch events
+	const [openModal, setOpenModal] = useState(false); // Modal visibility state
+	const [modalMode, setModalMode] = useState('info'); // Default modal mode
+	const [selectedEventId, setSelectedEventId] = useState(null); // To store selected event ID
+
+	// Handle opening the modal in 'register' mode
+	const handleOpenRegisterModal = (eventId) => {
+		setSelectedEventId(eventId);
+		setModalMode('register');
+		setOpenModal(true);
+	};
+
+	// Handle registration form submission
+	const handleRegistrationSubmit = (registrationId) => {
+		// Process the registration with the registrationId
+		alert(`Registration for event ${selectedEventId} submitted with ID: ${registrationId}`);
+	};
 
 	// Handle view change (list or grid)
 	const handleViewChange = (event, newView) => {
@@ -67,6 +85,13 @@ const Events = () => {
 				overflow: 'hidden',
 			}}
 		>
+			{/* Modal */}
+			<RegistrationModal
+				open={openModal}
+				onClose={() => setOpenModal(false)}
+				mode={modalMode}
+				onSubmit={handleRegistrationSubmit} // Pass the handler to process registration
+			/>
 			{/* Buttons to switch between List View and Grid View */}
 			<ToggleButtonGroup
 				value={view}
@@ -179,7 +204,7 @@ const Events = () => {
 									</Typography>
 								</Box>
 
-								{/* QR code and icons section */}
+								{/* QR code section */}
 								<Box
 									sx={{
 										marginTop: 3,
@@ -199,7 +224,34 @@ const Events = () => {
 									>
 										<QRCode value={registrationUrl} />
 									</Box>
-									<Box sx={{ display: 'flex', gap: 1 }}>
+									
+								</Box>
+
+								{/* Register Button */}
+								<Box
+									sx={{
+										marginTop: 2,
+										display: 'flex',
+										justifyContent: 'center',
+									}}
+								>
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={() => handleOpenRegisterModal(event.id)}
+										sx={{
+											backgroundColor: '#f98053',
+											'&:hover': {
+												backgroundColor: '#f55c23',
+											},
+										}}
+									>
+										Register for Event
+									</Button>
+                              
+								</Box>
+                                {/* Bookmark and Share Icons */}
+                                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'right'}}>
 										<IconButton>
 											<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
 										</IconButton>
@@ -207,7 +259,6 @@ const Events = () => {
 											<ShareIcon sx={{ color: '#252b4e' }} />
 										</IconButton>
 									</Box>
-								</Box>
 							</CardContent>
 						</Card>
 					);
