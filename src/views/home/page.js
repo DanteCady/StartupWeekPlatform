@@ -10,7 +10,7 @@ import RegistrationModal from '../../components/global/modal';
 const HomePage = () => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-	const [registrationID, setRegistrationID] = useState(null); // For storing the registration ID
+	const [registrantId, setRegistrantId] = useState(null); // For storing the registration ID
 	const [open, setOpen] = useState(false); // For controlling modal visibility
 
 	// Form state to store the form data
@@ -32,7 +32,7 @@ const HomePage = () => {
 		const result = await handleSubmit(event); // Call the custom hook to submit the form
 
 		if (result.success) {
-			setRegistrationID(result.registrationID); // Set the registration ID in state
+			setRegistrantId(result.registrantId); // Set the registration ID in state
 			setOpen(true); // Open the modal to display the registration ID
 		} else {
 			// Handle form submission failure (e.g., show an error message)
@@ -145,7 +145,7 @@ const HomePage = () => {
 			<RegistrationModal
 				open={open}
 				onClose={handleClose}
-				registrationID={registrationID}
+				registrantId={registrantId}
 			/>
 		</>
 	);

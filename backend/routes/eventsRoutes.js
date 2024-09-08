@@ -26,19 +26,19 @@ module.exports = (databasePool) => {
 
 	// Register for an event
 	async function registerForEvent(req, res) {
-		const { eventId, registrationId } = req.body; // Get eventId and registrationId from the request body
+		const { eventId, registrantId } = req.body; // Get eventId and registrationId from the request body
 
-		if (!eventId || !registrationId) {
+		if (!eventId || !registrantId) {
 			return res
 				.status(400)
-				.json({ error: 'Missing eventId or registrationId' }); // Validate input
+				.json({ error: 'Missing eventId or registrantId' }); // Validate input
 		}
 
 		try {
 			// Insert the registration details into the 'registrations' table
 			const query =
-				'INSERT INTO events_registrations (eventId, registrationId, createdAt) VALUES (?, ?, NOW())';
-			await databasePool.query(query, [eventId, registrationId]); // Execute the query
+				'INSERT INTO events_registrations (eventId, registrantId, registrationDate) VALUES (?, ?, NOW())';
+			await databasePool.query(query, [eventId, registrantId]); // Execute the query
 
 			res.status(201).json({ message: 'Registration successful' }); // Send success response
 		} catch (error) {

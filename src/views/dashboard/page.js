@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import DashboardSideBar from '../../components/dashboard/dashboardSideBar';
 import Events from '../../components/dashboard/eventsComponent';
 
-const DashboardPage = ({ registrationId }) => {
+const DashboardPage = ({ registrantId }) => {
 	return (
 		<div>
 			<Typography variant="h4">Events</Typography>

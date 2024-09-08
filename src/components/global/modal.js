@@ -7,7 +7,7 @@ const RegistrationModal = ({
 	open,
 	onClose,
 	mode = 'info', // 'info' or 'register'
-	registrationID = '',
+	registrantId = '',
 	onSubmit, // Function to handle form submission
 }) => {
 	const navigate = useNavigate();
@@ -15,8 +15,8 @@ const RegistrationModal = ({
 
 	// Function to copy the registration ID to clipboard (for 'info' mode)
 	const handleCopy = () => {
-		navigator.clipboard.writeText(registrationID);
-		alert('Registration ID copied to clipboard!');
+		navigator.clipboard.writeText(registrantId);
+		alert('Registrant ID copied to clipboard!');
 	};
 
 	// Function to handle close and navigate to events
@@ -66,14 +66,14 @@ const RegistrationModal = ({
 					<>
 						<Typography variant="h6">Registration Successful!</Typography>
 						<Typography variant="body1" sx={{ marginTop: '1rem' }}>
-							Your registration ID is: <strong>{registrationID}</strong>
+							Your registrant ID is: <strong>{registrantId}</strong>
 						</Typography>
 						<Button
 							onClick={handleCopy}
 							variant="contained"
 							sx={{ marginTop: '1rem', backgroundColor: '#f98053' }}
 						>
-							Copy Registration ID
+							Copy Registrant ID
 						</Button>
 						<Typography
 							variant="caption"

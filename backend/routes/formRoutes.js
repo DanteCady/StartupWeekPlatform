@@ -19,12 +19,12 @@ module.exports = (databasePool) => {
 
 			// Generate random registration ID
 			const registrationIdNumber = Math.floor(Math.random() * 10000);
-			const registrationID = `RSW-${firstName[0]}${lastName[0]}-${registrationIdNumber}`;
+			const registrantId = `RSW-${firstName[0]}${lastName[0]}-${registrationIdNumber}`;
 
 			const query =
-				'INSERT INTO registrants (registrationId, firstName, lastName, email, phoneNumber, affiliation, createdAt) VALUES (?, ?, ?, ?, ? ,?, NOW())';
+				'INSERT INTO registrants (registrantId, firstName, lastName, email, phoneNumber, affiliation, createdAt) VALUES (?, ?, ?, ?, ? ,?, NOW())';
 			const [result] = await databasePool.query(query, [
-				registrationID,
+				registrantId,
 				firstName,
 				lastName,
 				email,
@@ -33,7 +33,7 @@ module.exports = (databasePool) => {
 			]);
 
 			// Send the registration ID back to the client
-			res.status(200).json({ registrationID });
+			res.status(200).json({ registrantId });
 		} catch (error) {
 			res.status(500).send(error);
 		}

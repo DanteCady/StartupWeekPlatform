@@ -22,6 +22,8 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
 import RegistrationModal from '../global/modal';
+import useEventRegistration from '../../hooks/eventRegistration';
+
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
@@ -31,6 +33,7 @@ const Events = () => {
 	const [openModal, setOpenModal] = useState(false); // Modal visibility state
 	const [modalMode, setModalMode] = useState('info'); // Default modal mode
 	const [selectedEventId, setSelectedEventId] = useState(null); // To store selected event ID
+	const { registerForEvent, loading: regLoading, error: regError } = useEventRegistration(); // Use the registration hook
 
 	// Handle opening the modal in 'register' mode
 	const handleOpenRegisterModal = (eventId) => {
@@ -40,9 +43,13 @@ const Events = () => {
 	};
 
 	// Handle registration form submission
-	const handleRegistrationSubmit = (registrationId) => {
-		// Process the registration with the registrationId
-		alert(`Registration for event ${selectedEventId} submitted with ID: ${registrationId}`);
+	const handleRegistrationSubmit = async (registrantId) => {
+		const result = await registerForEvent(selectedEventId, { registrantId }); // Call the hook with the selected event and registration ID
+		if (result.success) {
+			alert(result.message);
+		} else {
+			alert(result.message);
+		}
 	};
 
 	// Handle view change (list or grid)
@@ -85,13 +92,6 @@ const Events = () => {
 				overflow: 'hidden',
 			}}
 		>
-			{/* Modal */}
-			<RegistrationModal
-				open={openModal}
-				onClose={() => setOpenModal(false)}
-				mode={modalMode}
-				onSubmit={handleRegistrationSubmit} // Pass the handler to process registration
-			/>
 			{/* Buttons to switch between List View and Grid View */}
 			<ToggleButtonGroup
 				value={view}
@@ -169,7 +169,7 @@ const Events = () => {
 
 					return (
 						<Card
-							key={event.id}
+							key={event.eventId}
 							sx={{
 								display: view === 'list' ? 'flex' : 'block',
 								flexDirection: view === 'list' ? 'row' : 'column',
@@ -205,7 +205,7 @@ const Events = () => {
 								</Box>
 
 								{/* QR code section */}
-								<Box
+								{/* <Box
 									sx={{
 										marginTop: 3,
 										display: 'flex',
@@ -225,7 +225,7 @@ const Events = () => {
 										<QRCode value={registrationUrl} />
 									</Box>
 									
-								</Box>
+								</Box> */}
 
 								{/* Register Button */}
 								<Box
@@ -238,7 +238,7 @@ const Events = () => {
 									<Button
 										variant="contained"
 										color="primary"
-										onClick={() => handleOpenRegisterModal(event.id)}
+										onClick={() => handleOpenRegisterModal(event.eventId)}
 										sx={{
 											backgroundColor: '#f98053',
 											'&:hover': {
@@ -264,6 +264,13 @@ const Events = () => {
 					);
 				})}
 			</Box>
+				{/* Modal */}
+				<RegistrationModal
+				open={openModal}
+				onClose={() => setOpenModal(false)}
+				mode={modalMode}
+				onSubmit={handleRegistrationSubmit} // Pass the handler to process registration
+			/>
 		</Box>
 	);
 };

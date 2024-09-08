@@ -19,7 +19,7 @@ export const SubmitForm = (formState, setFormState) => {
 
             // Check the response status
             if (response.status === 200) {
-                const registrationID = response.data.registrationID; // Capture the registrationID from the response
+                const registrantId = response.data.registrantId; // Capture the registrationID from the response
                 // Reset the form state if successful
                 setFormState({
                     firstName: '',
@@ -28,7 +28,7 @@ export const SubmitForm = (formState, setFormState) => {
                     phoneNumber: '',
                     affiliation: '',
                 });
-                return { success: true, registrationID }; // Return success and the registrationID
+                return { success: true, registrantId }; // Return success and the registrationID
             } else {
                 return { success: false, error: 'Form submission failed. Please try again.' }; // Return failure message
             }
