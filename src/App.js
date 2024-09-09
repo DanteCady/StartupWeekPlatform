@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Views
 import Home from './views/home/page';
 import Dashboard from './views/dashboard/page';
+import CheckInPage from './views/checkIn/page';
 
 //gloabl layout
 import Layout from './components/global/layout';
@@ -25,6 +26,14 @@ function App() {
 					element={
 						<Layout>
 							<Dashboard />
+						</Layout>
+					}
+				/>
+				<Route
+					path="/register?eventId=:eventId/check-in"
+					element={
+						<Layout>
+							<CheckInPage />
 						</Layout>
 					}
 				/>
