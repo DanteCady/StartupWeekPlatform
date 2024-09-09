@@ -252,9 +252,11 @@ const Events = () => {
 										sx={{
 											marginTop: 2,
 											display: 'flex',
-											justifyContent: 'center',
+											justifyContent: 'space-between',
+											alignItems: 'center', // Align icons and button in the same row
 										}}
 									>
+										{/* Register Button */}
 										<Button
 											variant="contained"
 											color="primary"
@@ -264,22 +266,23 @@ const Events = () => {
 												'&:hover': {
 													backgroundColor: '#f55c23',
 												},
+												marginRight: 2, // Add margin to separate button and icons
 											}}
 										>
 											Register for Event
 										</Button>
+
+										{/* Bookmark and Share Icons */}
+										<Box sx={{ display: 'flex', gap: 1 }}>
+											<IconButton>
+												<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+											</IconButton>
+											<IconButton>
+												<ShareIcon sx={{ color: '#252b4e' }} />
+											</IconButton>
+										</Box>
 									</Box>
 								)}
-
-								{/* Bookmark and Share Icons */}
-								<Box sx={{ display: 'flex', gap: 1, justifyContent: 'right' }}>
-									<IconButton>
-										<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-									</IconButton>
-									<IconButton>
-										<ShareIcon sx={{ color: '#252b4e' }} />
-									</IconButton>
-								</Box>
 							</CardContent>
 						</Card>
 					);
