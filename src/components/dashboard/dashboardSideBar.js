@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   // Define heights of the header and footer
   const headerHeight = '80px'; 
-  const footerHeight = '110px'; 
+  const footerHeight = '150px'; 
 
   // Calculate available height for the sidebar (between header and footer)
   const availableHeight = `calc(100vh - ${headerHeight} - ${footerHeight})`;
@@ -79,14 +79,13 @@ const Sidebar = () => {
         <Drawer
           variant="permanent"
           sx={{
-            width: 240,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: 240,
               position: 'fixed',
               top: headerHeight, 
               height: availableHeight, 
-              overflowY: 'auto',  
+              border: 'none', 
             },
           }}
         >

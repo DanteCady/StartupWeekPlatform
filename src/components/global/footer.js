@@ -12,9 +12,10 @@ const Footer = () => {
 				width: '100%',
 				backgroundColor: '#252b4e',
 				height: '110px',
-				position: 'relative', // Change this to relative to avoid overlap issues
+				position: 'relative', 
 				bottom: 0,
 				marginTop: 'auto',
+  
 			}}
 		>
 			<Box
