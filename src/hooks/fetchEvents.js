@@ -20,7 +20,7 @@ export const useFetchEvents = () => {
 
         // Combine the date and time fields using Moment.js
         const adjustedEvents = data.map(event => {
-          const eventDateTime = moment.tz(`${event.date} ${event.time}`, 'America/New_York'); // Combine date and time with EST time zone
+          const eventDateTime = moment.tz(`${event.date} ${event.startTime}`, 'America/New_York'); // Combine date and time with EST time zone
           return {
             ...event,
             eventDateTime, // Add the combined Moment.js date object

@@ -12,6 +12,7 @@ const Header = () => {
         width: '100%',
         backgroundColor: '#252b4e',
         height: '80px',
+        
     }}
     >
     </Box>
