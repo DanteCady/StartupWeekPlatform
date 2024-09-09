@@ -17,11 +17,14 @@ const CheckInPage = () => {
         }
     };
 
+    // Split eventId eventiD to get the actual ID
+    const id = eventId.split('=')[1];
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 4 }}>
             <Typography variant="h4">Event Check-In</Typography>
             <Typography variant="body1" sx={{ marginBottom: 2 }}>
-                Event ID: {eventId}
+                Event ID: {id}
             </Typography>
 
             <TextField
