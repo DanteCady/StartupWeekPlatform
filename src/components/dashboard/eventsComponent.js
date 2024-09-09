@@ -213,7 +213,8 @@ const Events = () => {
 
 					const formattedDate = eventDateTime.format('MMMM Do YYYY');
 					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
-					
+					const formattedEndTime = eventEndTime.format('h:mm A'); // 12-hour format with AM/PM
+
 					// Construct the registration URL for the event
 					const registrationURLLink = process.env.REACT_APP_CHECKIN_URL;
 					const registrationUrl =  `${registrationURLLink}=${event.eventId}/check-in`;
@@ -266,7 +267,7 @@ const Events = () => {
 											<CalendarMonthIcon
 												sx={{ fontSize: 16, marginRight: 1, color: 'black' }}
 											/>
-											{formattedDate} at {formattedTime}
+											{formattedDate} at {formattedTime} - {formattedEndTime}
 										</Typography>
 									</Box>
 								</Box>
