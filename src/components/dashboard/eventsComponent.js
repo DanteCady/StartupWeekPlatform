@@ -9,7 +9,7 @@ import {
 	ToggleButton,
 	CircularProgress,
 	Button,
-	Pagination, 
+	Pagination,
 } from '@mui/material';
 import {
 	BookmarkBorderOutlinedIcon,
@@ -18,6 +18,7 @@ import {
 	ViewModuleIcon,
 	ViewModuleOutlinedIcon,
 	ViewListOutlinedIcon,
+	CalendarMonthIcon,
 } from '../../assets/icons';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
@@ -104,224 +105,255 @@ const Events = () => {
 
 	return (
 		<Box
-		sx={{
-			padding: 1,
-			display: 'flex',
-			flexDirection: 'column',
-			justifyContent: 'center',
-			overflow: 'hidden',
-		}}
-	>
-		{/* Buttons to switch between List View and Grid View */}
-		<ToggleButtonGroup
-			value={view}
-			exclusive
-			onChange={handleViewChange}
 			sx={{
-				marginBottom: 2,
+				padding: 1,
 				display: 'flex',
-				justifyContent: 'flex-end',
+				flexDirection: 'column',
+				justifyContent: 'center',
+				overflow: 'hidden',
 			}}
 		>
-			<ToggleButton
-				value="list"
+			{/* Buttons to switch between List View and Grid View */}
+			<ToggleButtonGroup
+				value={view}
+				exclusive
+				onChange={handleViewChange}
 				sx={{
-					color: view === 'list' ? '#f98053' : '#252b4e',
-					borderColor: 'transparent',
-					'&.Mui-selected': {
-						backgroundColor: 'transparent',
-					},
+					marginBottom: 2,
+					display: 'flex',
+					justifyContent: 'flex-end',
 				}}
 			>
-				{view === 'list' ? (
-					<ViewListOutlinedIcon sx={{ color: '#f98053', marginRight: 1 }} />
-				) : (
-					<ViewListIcon sx={{ color: '#252b4e', marginRight: 1 }} />
-				)}
-				<Typography
+				<ToggleButton
+					value="list"
 					sx={{
 						color: view === 'list' ? '#f98053' : '#252b4e',
-						fontWeight: 'bold',
+						borderColor: 'transparent',
+						'&.Mui-selected': {
+							backgroundColor: 'transparent',
+						},
 					}}
 				>
-					List
-				</Typography>
-			</ToggleButton>
-	
-			<ToggleButton
-				value="grid"
-				sx={{
-					color: view === 'grid' ? '#f98053' : '#252b4e',
-					borderColor: 'transparent',
-					'&.Mui-selected': {
-						backgroundColor: 'transparent',
-					},
-				}}
-			>
-				{view === 'grid' ? (
-					<ViewModuleOutlinedIcon sx={{ color: '#f98053', marginRight: 1 }} />
-				) : (
-					<ViewModuleIcon sx={{ color: '#252b4e', marginRight: 1 }} />
-				)}
-				<Typography
+					{view === 'list' ? (
+						<ViewListOutlinedIcon sx={{ color: '#f98053', marginRight: 1 }} />
+					) : (
+						<ViewListIcon sx={{ color: '#252b4e', marginRight: 1 }} />
+					)}
+					<Typography
+						sx={{
+							color: view === 'list' ? '#f98053' : '#252b4e',
+							fontWeight: 'bold',
+						}}
+					>
+						List
+					</Typography>
+				</ToggleButton>
+
+				<ToggleButton
+					value="grid"
 					sx={{
 						color: view === 'grid' ? '#f98053' : '#252b4e',
-						fontWeight: 'bold',
+						borderColor: 'transparent',
+						'&.Mui-selected': {
+							backgroundColor: 'transparent',
+						},
 					}}
 				>
-					Grid
-				</Typography>
-			</ToggleButton>
-		</ToggleButtonGroup>
-	
-		{/* Conditional rendering based on the view */}
-		<Box
-			sx={{
-				display: 'flex',
-				flexDirection: view === 'list' ? 'column' : 'row',
-				gap: 2,
-				flexWrap: 'wrap',
-			}}
-		>
-			{currentEvents.map((event) => {
-	const currentDateTime = moment();
+					{view === 'grid' ? (
+						<ViewModuleOutlinedIcon sx={{ color: '#f98053', marginRight: 1 }} />
+					) : (
+						<ViewModuleIcon sx={{ color: '#252b4e', marginRight: 1 }} />
+					)}
+					<Typography
+						sx={{
+							color: view === 'grid' ? '#f98053' : '#252b4e',
+							fontWeight: 'bold',
+						}}
+					>
+						Grid
+					</Typography>
+				</ToggleButton>
+			</ToggleButtonGroup>
 
-	// Combine event start and end time
-	const eventStartTime = moment.tz(`${event.date} ${event.startTime}`, 'YYYY-MM-DD HH:mm:ss', 'America/New_York');
-	const eventEndTime = moment.tz(`${event.date} ${event.endTime}`, 'YYYY-MM-DD HH:mm:ss', 'America/New_York');
-
-	// Check if the event has started or ended
-	const hasEventStarted = currentDateTime.isSameOrAfter(eventStartTime);
-	const hasEventEnded = currentDateTime.isSameOrAfter(eventEndTime);
-
-	const formattedDate = eventStartTime.format('MMMM Do YYYY');
-	const formattedTime = eventStartTime.format('h:mm A'); // 12-hour format with AM/PM
-	// Construct the registration URL for the event
-	const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
-
-	return (
-		<Card
-			key={event.eventId}
-			sx={{
-				display: view === 'list' ? 'flex' : 'block',
-				flexDirection: view === 'list' ? 'row' : 'column',
-				gap: 2,
-				width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
-				height: '380px', // Set a fixed height for uniformity
-				justifyContent: 'space-between', // Space out content in grid view
-				borderRadius: 1,
-			}}
-		>
-			<CardContent
+			{/* Conditional rendering based on the view */}
+			<Box
 				sx={{
 					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'space-between',
-					height: '100%',
+					flexDirection: view === 'list' ? 'column' : 'row',
+					gap: 2,
+					flexWrap: 'wrap',
 				}}
 			>
-				{/* Title and description section */}
-				<Box>
-					<Typography variant="h6">{event.title}</Typography>
-					<hr />
-					<Typography
-						variant="body2"
-						color="text.secondary"
-						gutterBottom
-						sx={{ marginTop: 1, lineHeight: 2, color: 'black' }}
-					>
-						{event.description}
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-						{formattedDate} at {formattedTime}
-					</Typography>
-				</Box>
+				{currentEvents.map((event) => {
+					const currentDateTime = moment.tz('America/New_York');
 
-				{/* Conditionally show the register button or QR code or event ended text */}
-				{hasEventEnded ? (
-					<Box
-						sx={{
-							marginTop: 2,
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-							flexGrow: 1,
-							justifyContent: 'center',
-						}}
-					>
-						<Typography variant="body1" color="error">
-							Event has ended
-						</Typography>
-					</Box>
-				) : hasEventStarted ? (
-					<Box
-						sx={{
-							marginTop: 2,
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-							flexGrow: 1,
-						}}
-					>
-						<Box
+					// Correctly combine the event date and startTime in local time
+					const eventDateTime = moment.tz(
+						`${event.date} ${event.startTime}`,
+						'YYYY-MM-DD HH:mm:ss',
+						'America/New_York'
+					);
+
+					// Adjust the end date if the event ends after midnight
+					const eventEndDate =
+						event.startTime > event.endTime
+							? moment(event.date).add(1, 'day')
+							: moment(event.date);
+					const eventEndTime = moment.tz(
+						`${eventEndDate.format('YYYY-MM-DD')} ${event.endTime}`,
+						'YYYY-MM-DD HH:mm:ss',
+						'America/New_York'
+					);
+
+					// Check if the event has started or ended
+					const hasEventStarted = currentDateTime.isSameOrAfter(eventDateTime);
+					const hasEventEnded = currentDateTime.isSameOrAfter(eventEndTime);
+
+					const formattedDate = eventDateTime.format('MMMM Do YYYY');
+					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
+					// Construct the registration URL for the event
+					const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
+
+					return (
+						<Card
+							key={event.eventId}
 							sx={{
-								height: 80,
-								width: 80,
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
+								display: view === 'list' ? 'flex' : 'block',
+								flexDirection: view === 'list' ? 'row' : 'column',
+								gap: 2,
+								width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
+								height: '380px', // Set a fixed height for uniformity
+								justifyContent: 'space-between', // Space out content in grid view
+								borderRadius: 1,
 							}}
 						>
-							<QRCode value={registrationUrl} />
-						</Box>
-						<Typography variant="body1" color="primary" sx={{ marginTop: 3 }}>
-							Event Started, Check In now
-						</Typography>
-					</Box>
-				) : (
-					<Box
-						sx={{
-							marginTop: 2,
-							display: 'flex',
-							alignItems: 'center',
-							flexGrow: 1,
-							justifyContent: 'flex-end',
-						}}
-					>
-						{/* Register Button */}
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={() => handleOpenRegisterModal(event.eventId)}
-							sx={{
-								backgroundColor: '#f98053',
-								'&:hover': {
-									backgroundColor: '#f55c23',
-								},
-								marginRight: 2,
-							}}
-						>
-							Register for Event
-						</Button>
+							<CardContent
+								sx={{
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'space-between',
+									height: '100%',
+								}}
+							>
+								{/* Title and description section */}
+								<Box>
+									<Typography variant="h6">{event.title}</Typography>
+									<hr />
+									<Typography
+										variant="body2"
+										color="text.secondary"
+										gutterBottom
+										sx={{ marginTop: 1, lineHeight: 2, color: 'black' }}
+									>
+										{event.description}
+									</Typography>
+									<Box
+										sx={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center',
+											justifyContent: 'space-between',
+											marginTop: 1,
+											mr: 1,
+										}}
+									>
+										<Typography variant="body2" color="black">
+											<CalendarMonthIcon
+												sx={{ fontSize: 16, marginRight: 1, color: 'black' }}
+											/>
+											{formattedDate} at {formattedTime}
+										</Typography>
+									</Box>
+								</Box>
 
-						{/* Bookmark and Share Icons */}
-						<Box sx={{ display: 'flex', gap: 1 }}>
-							<IconButton>
-								<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-							</IconButton>
-							<IconButton>
-								<ShareIcon sx={{ color: '#252b4e' }} />
-							</IconButton>
-						</Box>
-					</Box>
-				)}
-			</CardContent>
-		</Card>
-	);
-})}
+								{/* Conditionally show the register button or QR code */}
+								{hasEventEnded ? (
+									<Box
+										sx={{
+											marginTop: 2,
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											flexGrow: 1, // Ensure the height fills evenly
+										}}
+									>
+										<Typography variant="body1" color="error">
+											Event has ended
+										</Typography>
+									</Box>
+								) : hasEventStarted ? (
+									<Box
+										sx={{
+											marginTop: 2,
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											flexGrow: 1, // Ensure the height fills evenly
+										}}
+									>
+										<Box
+											sx={{
+												height: 80,
+												width: 80,
+												display: 'flex',
+												justifyContent: 'center',
+												alignItems: 'center',
+											}}
+										>
+											<QRCode value={registrationUrl} />
+										</Box>
+										<Typography
+											variant="body1"
+											color="primary"
+											sx={{ marginTop: 3 }}
+										>
+											Event Started, Check In now
+										</Typography>
+									</Box>
+								) : (
+									<Box
+										sx={{
+											marginTop: 2,
+											display: 'flex',
+											justifyContent: 'space-between',
+											alignItems: 'center',
+											flexGrow: 1, // Ensure the height fills evenly
+											justifyContent: 'flex-end', // Keep button at bottom
+										}}
+									>
+										{/* Register Button */}
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={() => handleOpenRegisterModal(event.eventId)}
+											sx={{
+												backgroundColor: '#f98053',
+												'&:hover': {
+													backgroundColor: '#f55c23',
+												},
+												marginRight: 2, // Add margin to separate button and icons
+											}}
+										>
+											Register for Event
+										</Button>
 
-		</Box>
-	
+										{/* Bookmark and Share Icons */}
+										<Box sx={{ display: 'flex', gap: 1 }}>
+											<IconButton>
+												<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+											</IconButton>
+											<IconButton>
+												<ShareIcon sx={{ color: '#252b4e' }} />
+											</IconButton>
+										</Box>
+									</Box>
+								)}
+							</CardContent>
+						</Card>
+					);
+				})}
+			</Box>
+
 			{/* Pagination Controls */}
 			<Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
 				<Pagination
