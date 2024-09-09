@@ -23,6 +23,18 @@ const Footer = () => {
         ml: 5,
       }}
       >
+				<Link href="/events" sx={{ color: 'white' }}>
+					<Typography sx={{ color: 'white' }}>Events</Typography>
+				</Link>
+        <Link href='/my-events'>
+				<Typography sx={{ color: 'white' }}>Login</Typography>
+        </Link>
+			</Box>
+      <Box
+      sx={{
+        ml: 5,
+      }}
+      >
 				<Link href="/administration" sx={{ color: 'white' }}>
 					<Typography sx={{ color: 'white' }}>Administration</Typography>
 				</Link>
