@@ -16,6 +16,7 @@ const Layout = ({ children }) => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          paddingTop: '64px', // Add padding equal to the header height (adjust based on your header height)
           paddingBottom: theme.spacing(8),
           paddingLeft: isMobile ? theme.spacing(2) : 0,
           paddingRight: isMobile ? theme.spacing(2) : 0,

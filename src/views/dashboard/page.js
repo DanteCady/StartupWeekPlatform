@@ -5,7 +5,16 @@ import Events from '../../components/dashboard/eventsComponent';
 
 const DashboardPage = ({ registrantId }) => {
 	return (
-		<div>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				paddingTop: '64px',
+				paddingBottom: 8,
+				overflowX: 'hidden',
+			}}
+		>
 			<Typography variant="h4">Events</Typography>
 			<Typography
 				variant="body1"
@@ -19,7 +28,7 @@ const DashboardPage = ({ registrantId }) => {
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 				<Events />
 			</Box>
-		</div>
+		</Box>
 	);
 };
 
