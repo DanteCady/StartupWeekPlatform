@@ -182,6 +182,8 @@ const Events = () => {
 					flexDirection: view === 'list' ? 'column' : 'row',
 					gap: 2,
 					flexWrap: 'wrap',
+					minHeight: '400px', // Ensure a minimum height for the container
+					justifyContent: currentEvents.length === 1 ? 'center' : 'flex-start', // Center single card
 				}}
 			>
 				{currentEvents.map((event) => {
@@ -211,6 +213,7 @@ const Events = () => {
 
 					const formattedDate = eventDateTime.format('MMMM Do YYYY');
 					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
+					
 					// Construct the registration URL for the event
 					const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
 
@@ -222,8 +225,9 @@ const Events = () => {
 								flexDirection: view === 'list' ? 'row' : 'column',
 								gap: 2,
 								width: view === 'list' ? '100%' : isMobile ? '100%' : '30%',
+								minWidth: '300px', // Ensure a minimum width for the card
 								height: '380px', // Set a fixed height for uniformity
-								justifyContent: 'space-between', // Space out content in grid view
+								justifyContent: 'space-between',
 								borderRadius: 1,
 							}}
 						>
@@ -318,7 +322,6 @@ const Events = () => {
 											justifyContent: 'space-between',
 											alignItems: 'center',
 											flexGrow: 1, // Ensure the height fills evenly
-											justifyContent: 'flex-end', // Keep button at bottom
 										}}
 									>
 										{/* Register Button */}
