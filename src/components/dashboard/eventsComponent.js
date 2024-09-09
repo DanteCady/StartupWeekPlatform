@@ -23,6 +23,7 @@ import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
 import RegistrationModal from '../global/modal';
 import useEventRegistration from '../../hooks/eventRegistration';
+import moment from 'moment-timezone';
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
@@ -32,7 +33,11 @@ const Events = () => {
 	const [openModal, setOpenModal] = useState(false); // Modal visibility state
 	const [modalMode, setModalMode] = useState('info'); // Default modal mode
 	const [selectedEventId, setSelectedEventId] = useState(null); // To store selected event ID
-	const { registerForEvent, loading: regLoading, error: regError } = useEventRegistration(); // Use the registration hook
+	const {
+		registerForEvent,
+		loading: regLoading,
+		error: regError,
+	} = useEventRegistration(); // Use the registration hook
 
 	// Handle opening the modal in 'register' mode
 	const handleOpenRegisterModal = (eventId) => {
@@ -163,14 +168,16 @@ const Events = () => {
 				}}
 			>
 				{events.map((event) => {
-					// Get current date and time
-					const currentDateTime = new Date();
-					// Get event date and time combined into a single Date object
-					const eventDateTime = new Date(`${event.date}T${event.time}`);
+					const currentDateTime = moment();
+
+					// Correctly combine the event date and time
+					const eventDateTime = moment.tz(`${event.date} ${event.time}`, 'YYYY-MM-DD HH:mm:ss', 'America/New_York');
 
 					// Check if the event has started
-					const hasEventStarted = currentDateTime >= eventDateTime;
+					const hasEventStarted = currentDateTime.isSameOrAfter(eventDateTime);
 
+					const formattedDate = eventDateTime.format('MMMM Do YYYY');
+					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
 					// Construct the registration URL for the event
 					const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
 
@@ -207,7 +214,7 @@ const Events = () => {
 										{event.description}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">
-										{new Date(event.date).toLocaleDateString()} at {event.time}
+										{formattedDate} at {formattedTime}
 									</Typography>
 								</Box>
 
@@ -221,7 +228,11 @@ const Events = () => {
 											alignItems: 'center',
 										}}
 									>
-										<Typography variant="body1" color="primary" sx={{ marginBottom: 1 }}>
+										<Typography
+											variant="body1"
+											color="primary"
+											sx={{ marginBottom: 1 }}
+										>
 											Event Started, Check In now
 										</Typography>
 										<Box
