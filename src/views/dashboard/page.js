@@ -15,15 +15,21 @@ const DashboardPage = ({ registrantId }) => {
 				overflowX: 'hidden',
 			}}
 		>
-			<Typography variant="h4">Events</Typography>
-			<Typography
-				variant="body1"
-				color="textSecondary"
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'flex-start',
+				}}
 			>
-				Explore our exciting lineup of events designed to connect entrepreneurs,
-				showcase innovative startups, and provide invaluable networking
-				opportunities. Grow your startup and collaborate with industry leaders.
-			</Typography>
+				<Typography variant="h4">Events</Typography>
+				<Typography variant="body1" color="textSecondary">
+					Explore our exciting lineup of events designed to connect
+					entrepreneurs, showcase innovative startups, and provide invaluable
+					networking opportunities. Grow your startup and collaborate with
+					industry leaders.
+				</Typography>
+			</Box>
 			<DashboardSideBar />
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 				<Events />
