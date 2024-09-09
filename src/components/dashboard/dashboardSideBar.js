@@ -10,6 +10,13 @@ const Sidebar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
   const [open, setOpen] = useState(false);
 
+  // Define heights of the header and footer
+  const headerHeight = '80px'; 
+  const footerHeight = '110px'; 
+
+  // Calculate available height for the sidebar (between header and footer)
+  const availableHeight = `calc(100vh - ${headerHeight} - ${footerHeight})`;
+
   // Toggle Drawer for mobile view
   const toggleDrawer = () => {
     setOpen(!open);
@@ -19,9 +26,9 @@ const Sidebar = () => {
     <>
       {/* Close Button in the Drawer (only on mobile) */}
       {isMobile && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end',}}>
           <IconButton onClick={toggleDrawer}>
-            <CloseIcon sx={{color: '#f98053'}} />
+            <CloseIcon sx={{ color: '#f98053' }} />
           </IconButton>
         </Box>
       )}
@@ -54,7 +61,7 @@ const Sidebar = () => {
               onClick={toggleDrawer}
               sx={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1300 }} // Position for mobile
             >
-              <MenuIcon sx={{color: '#f98053'}} />
+              <MenuIcon sx={{ color: '#f98053' }} />
             </IconButton>
           )}
           <Drawer
@@ -63,7 +70,9 @@ const Sidebar = () => {
             onClose={toggleDrawer}
             sx={{ '& .MuiDrawer-paper': { width: 240 } }}
           >
-            {drawerContent}
+            <Box sx={{ height: availableHeight, overflowY: 'auto' }}>
+              {drawerContent}
+            </Box>
           </Drawer>
         </>
       ) : (
@@ -74,10 +83,10 @@ const Sidebar = () => {
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: 240,
-              boxSizing: 'border-box',
               position: 'fixed',
-              top: '80px',
-              height: 'calc(100vh - 80px)', // Sidebar height to fit the viewport below the header
+              top: headerHeight, 
+              height: availableHeight, 
+              overflowY: 'auto',  
             },
           }}
         >
