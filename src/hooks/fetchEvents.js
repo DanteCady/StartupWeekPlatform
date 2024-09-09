@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import moment from 'moment-timezone'; // Import moment-timezone
+import axios from 'axios'; // Import Axios
+import moment from 'moment-timezone'; 
 
 // Custom hook to fetch events from the API
 export const useFetchEvents = () => {
@@ -7,19 +8,16 @@ export const useFetchEvents = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const eventsEndpoint = process.env.REACT_APP_EVENTS_ENDPOINT; // Define the events endpoint
+  const eventsEndpoint = process.env.REACT_APP_EVENTS_ENDPOINT; 
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${eventsEndpoint}/all`); // Fetch events from the API
-        if (!response.ok) {
-          throw new Error('Error fetching events');
-        }
-        const data = await response.json(); // Parse the JSON data
+        // Use Axios to fetch events from the API
+        const response = await axios.get(`${eventsEndpoint}/all`);
 
         // Combine the date and time fields using Moment.js
-        const adjustedEvents = data.map(event => {
+        const adjustedEvents = response.data.map(event => {
           const eventDateTime = moment.tz(`${event.date} ${event.startTime}`, 'America/New_York'); // Combine date and time with EST time zone
           return {
             ...event,
@@ -31,13 +29,13 @@ export const useFetchEvents = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching events:', error);
-        setError(error.message);
+        setError(error.response?.data?.message || error.message);
         setLoading(false);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [eventsEndpoint]); // Ensure the effect runs when eventsEndpoint changes
 
   return { events, loading, error };
 };

@@ -215,7 +215,8 @@ const Events = () => {
 					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
 					
 					// Construct the registration URL for the event
-					const registrationUrl = `http://localhost:3000/register?eventId=${event.eventId}`;
+					const registrationURLLink = process.env.REACT_APP_CHECKIN_URL;
+					const registrationUrl =  `${registrationURLLink}=${event.eventId}/check-in`;
 
 					return (
 						<Card

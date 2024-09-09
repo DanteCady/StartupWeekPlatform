@@ -30,7 +30,7 @@ function App() {
 					}
 				/>
 				<Route
-					path="/register?eventId=:eventId/check-in"
+					path="/register/:eventId/check-in"
 					element={
 						<Layout>
 							<CheckInPage />

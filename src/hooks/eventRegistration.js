@@ -1,35 +1,36 @@
 import { useState } from 'react';
+import axios from 'axios'; // Import Axios
 
 export const useEventRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const eventsEndpoint = process.env.REACT_APP_EVENTS_ENDPOINT;
+  const eventsEndpoint = process.env.REACT_APP_EVENTS_ENDPOINT; 
 
   const registerForEvent = async (eventId, formState) => {
     setLoading(true);
     setError(null); // Reset error state before attempting registration
-    
+
     try {
-      const response = await fetch(`${eventsEndpoint}/register`, {
-        method: 'POST',
-        body: JSON.stringify({ eventId, ...formState }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      // Make the POST request with Axios
+      const response = await axios.post(`${eventsEndpoint}/register`, {
+        eventId,
+        ...formState,
       });
 
-      if (response.ok) {
-        return { success: true, message: 'You have successfully registered for the event!' };
-      } else {
-        const errorMessage = 'Failed to register for the event';
-        setError(errorMessage);
-        return { success: false, message: errorMessage };
-      }
-    } catch (error) {
-      const errorMessage = 'Error during registration';
-      console.error(errorMessage, error);
+      return {
+        success: true,
+        message: 'You have successfully registered for the event!',
+      };
+    } catch (err) {
+      // Handle the error with Axios response data if available
+      const errorMessage = err.response?.data?.message || 'Error during registration';
+      console.error(errorMessage, err);
       setError(errorMessage);
-      return { success: false, message: errorMessage };
+
+      return {
+        success: false,
+        message: errorMessage,
+      };
     } finally {
       setLoading(false);
     }

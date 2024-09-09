@@ -12,7 +12,7 @@ module.exports = (databasePool) => {
 	router.post('/register', registerForEvent);
 
 	// Check-in to an event
-	router.post('/checkin', checkInToEvent);
+	router.post('/check-in', checkInToEvent);
 	// ################ Route Handlers ################ //
 	// ############################################ //
 	// Get all events
@@ -58,32 +58,43 @@ module.exports = (databasePool) => {
         }
     }
     
-
-	// Check-in to an event
+// Function to handle event check-in
 async function checkInToEvent(req, res) {
-    const { eventId, registrantId } = req.body; // Get eventId and registrationId from the request body
+    let { eventId, registrantId } = req.body;
+
+    // Extract the correct eventId if it's in the format "eventId=fliy983"
+    if (eventId.includes('='))
+        eventId = eventId.split('=')[1];
 
     if (!eventId || !registrantId) {
-        return res.status(400).json({ error: 'Missing eventId or registrantId' }); // Validate input
+        return res.status(400).json({ error: 'Missing eventId or registrantId' });
     }
 
     try {
-        // Check if the user has already checked in for this event
-        const checkQuery = 'SELECT * FROM events_checkins WHERE eventId = ? AND registrantId = ?';
-        const [existingCheckIn] = await databasePool.query(checkQuery, [eventId, registrantId]);
+        // Check if eventId exists in the events table
+        const eventCheckQuery = 'SELECT * FROM events WHERE eventId = ?';
+        const [event] = await databasePool.query(eventCheckQuery, [eventId]);
+
+        if (event.length === 0) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Check if the registrant has already checked in for this event
+        const checkInQuery = 'SELECT * FROM events_checkins WHERE eventId = ? AND registrantId = ?';
+        const [existingCheckIn] = await databasePool.query(checkInQuery, [eventId, registrantId]);
 
         if (existingCheckIn.length > 0) {
             return res.status(400).json({ error: 'User has already checked in for this event' });
         }
 
-        // Insert the check-in details into the 'event_checkins' table
+        // Insert a new check-in record
         const insertQuery = 'INSERT INTO events_checkins (eventId, registrantId, checkInTime) VALUES (?, ?, NOW())';
         await databasePool.query(insertQuery, [eventId, registrantId]);
 
-        res.status(201).json({ message: 'Check-in successful' }); // Send success response
+        return res.status(201).json({ message: 'Check-in successful' });
     } catch (error) {
-        console.error('Error during check-in:', error); // Log the error
-        res.status(500).json({ error: 'Error during check-in' }); // Send error response
+        console.error('Error during check-in:', error);
+        return res.status(500).json({ error: 'Error during check-in' });
     }
 }
 
