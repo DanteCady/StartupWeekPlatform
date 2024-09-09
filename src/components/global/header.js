@@ -13,6 +13,7 @@ const Header = () => {
         backgroundColor: '#252b4e',
         height: '80px',
         position: 'fixed',
+        zIndex: 1000
     }}
     >
     </Box>
