@@ -306,7 +306,7 @@ const Events = () => {
 												alignItems: 'center',
 											}}
 										>
-											<QRCode value={registrationUrl} />
+											{/* <QRCode value={registrationUrl} /> */}
 										</Box>
 										<Typography
 											variant="body1"
