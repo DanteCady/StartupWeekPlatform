@@ -10,6 +10,7 @@ import ViewListOutlinedIcon from '@mui/icons-material/ViewListOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 export {
     CloseIcon,
@@ -23,5 +24,6 @@ export {
     ViewListOutlinedIcon,
     MenuIcon,
     BookmarkBorderOutlinedIcon,
-    CalendarMonthIcon
+    CalendarMonthIcon,
+    QrCodeScannerIcon,
 }

@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `startupweekdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `startupweekdb`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: startupweekdb
@@ -125,7 +123,7 @@ CREATE TABLE `registrants` (
   `createdAt` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `registrantId` (`registrantId`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,8 +132,37 @@ CREATE TABLE `registrants` (
 
 LOCK TABLES `registrants` WRITE;
 /*!40000 ALTER TABLE `registrants` DISABLE KEYS */;
-INSERT INTO `registrants` VALUES (24,'RSW-DC-109','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(25,'RSW-DC-2323','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(26,'RSW-DC-2680','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(27,'RSW-DC-1525','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(28,'RSW-DC-3907','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(29,'RSW-DC-7830','Dante Jordan','Cady','dantecady@gmail.com','4015481179','n/a','2024-09-09');
+INSERT INTO `registrants` VALUES (24,'RSW-DC-109','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(25,'RSW-DC-2323','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(26,'RSW-DC-2680','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(27,'RSW-DC-1525','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(28,'RSW-DC-3907','Dante Jordan','Cady','dantecady@gmail.com','4015481179','','2024-09-08'),(29,'RSW-DC-7830','Dante Jordan','Cady','dantecady@gmail.com','4015481179','n/a','2024-09-09'),(30,'RSW-DC-557','Dante Jordan','Cady','dantecady@gmail.com','4015481179','n/a','2024-09-10'),(31,'RSW-DC-2795','Dante Jordan','Cady','dantecady@gmail.com','4015481179','n/a','2024-09-10'),(32,'RSW-DC-6141','Dante Jordan','Cady','dantecady@gmail.com','4015481179','n/a','2024-09-10');
 /*!40000 ALTER TABLE `registrants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `registrants_bookmarks`
+--
+
+DROP TABLE IF EXISTS `registrants_bookmarks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `registrants_bookmarks` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `registrantId` varchar(45) NOT NULL,
+  `eventId` varchar(255) NOT NULL,
+  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `registrantId` (`registrantId`),
+  KEY `eventId` (`eventId`),
+  CONSTRAINT `registrants_bookmarks_ibfk_1` FOREIGN KEY (`registrantId`) REFERENCES `registrants` (`registrantId`),
+  CONSTRAINT `registrants_bookmarks_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`eventId`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `registrants_bookmarks`
+--
+
+LOCK TABLES `registrants_bookmarks` WRITE;
+/*!40000 ALTER TABLE `registrants_bookmarks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `registrants_bookmarks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -147,4 +174,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-09 16:06:05
+-- Dump completed on 2024-09-10 17:23:55

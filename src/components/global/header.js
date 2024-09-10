@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, IconButton } from '@mui/material';
 import RegistrationModal from '../global/modal';
 import useSignIn from '../../hooks/signIn';
+import { QrCodeScannerIcon } from '../../assets/icons';
+import { useMediaQuery, useTheme } from '@mui/material';
+import { QrReader } from 'react-qr-reader'; // Import QR reader component
 
 const Header = () => {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalMode, setModalMode] = useState('signin'); // State to control the mode ('signin', 'register', or 'info')
 	const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication status
+	const [qrScannerOpen, setQrScannerOpen] = useState(false); // State for QR scanner visibility
 
-	const { signIn, loading, error } = useSignIn(); 
+	const { signIn, loading, error } = useSignIn();
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 	// Check authentication status when the component mounts
 	useEffect(() => {
@@ -33,7 +39,7 @@ const Header = () => {
 	// Function to handle sign-in form submission
 	const handleSignInSubmit = async (registrantId) => {
 		await signIn(registrantId); // Use the signIn function from hook
-		setIsAuthenticated(true);  // Update authentication status after sign-in
+		setIsAuthenticated(true); // Update authentication status after sign-in
 		window.location.reload(); // Refresh the page
 	};
 
@@ -42,6 +48,25 @@ const Header = () => {
 		localStorage.removeItem('event_authentication_status'); // Clear local storage
 		setIsAuthenticated(false); // Update state
 		window.location.reload(); // Refresh the page
+	};
+
+	// Function to handle QR code scanning
+	const handleScan = (data) => {
+		if (data) {
+			// TODO Handle scanned data
+			console.log('Scanned QR code data:', data);
+			setQrScannerOpen(false); // Close QR scanner after successful scan
+		}
+	};
+
+	const handleError = (err) => {
+		console.error('Error scanning QR code:', err);
+		setQrScannerOpen(false); // Close QR scanner on error
+	};
+
+	// Function to toggle QR scanner visibility
+	const toggleQrScanner = () => {
+		setQrScannerOpen(!qrScannerOpen);
 	};
 
 	return (
@@ -70,14 +95,24 @@ const Header = () => {
 						padding: '0 20px',
 					}}
 				>
-					{/* If authenticated, show sign-out button; otherwise, show sign-in button */}
+					{/* If authenticated, show sign-out button and QR scanner; otherwise, show sign-in button */}
 					{isAuthenticated ? (
-						<Box>
+						<Box sx={{ display: 'flex', alignItems: 'center' }}>
 							<Button onClick={handleSignOut}>
 								<Typography variant="h6" sx={{ color: 'white', mr: 3 }}>
 									Sign Out
 								</Typography>
 							</Button>
+
+							{/* Add QR code scanner icon next to the Sign-Out button (only for signed-in users) */}
+							{isMobile && (
+								<IconButton
+									onClick={toggleQrScanner}
+									sx={{ color: 'white', ml: 1 }}
+								>
+									<QrCodeScannerIcon />
+								</IconButton>
+							)}
 						</Box>
 					) : (
 						<Box
@@ -100,15 +135,50 @@ const Header = () => {
 									Already Registered?
 								</Typography>
 							</Box>
-							<Button onClick={handleOpenSignIn}>
-								<Typography variant="h6" sx={{ color: 'white', mr: 3 }}>
-									Sign In
-								</Typography>
-							</Button>
+							<Box sx={{ display: 'flex', alignItems: 'center' }}>
+								<Button onClick={handleOpenSignIn}>
+									<Typography variant="h6" sx={{ color: 'white', mr: 3 }}>
+										Sign In
+									</Typography>
+								</Button>
+							</Box>
 						</Box>
 					)}
 				</Box>
 			</Box>
+
+			{/* QR Scanner Modal */}
+			{qrScannerOpen && (
+				<Box
+					sx={{
+						position: 'fixed',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						backgroundColor: 'rgba(0, 0, 0, 0.7)',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						zIndex: 2000,
+					}}
+				>
+					<QrReader
+						delay={300}
+						onError={handleError}
+						onScan={handleScan}
+						style={{ width: '300px', height: '300px' }}
+					/>
+					<Button
+						variant="contained"
+						color="error"
+						onClick={toggleQrScanner}
+						sx={{ position: 'absolute', top: '20px', right: '20px' }}
+					>
+						Close
+					</Button>
+				</Box>
+			)}
 
 			{/* Registration/Sign-In Modal */}
 			<RegistrationModal
