@@ -78,7 +78,15 @@ const Sidebar = () => {
               color="inherit"
               aria-label="menu"
               onClick={toggleDrawer}
-              sx={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1300 }} // Position for mobile
+              sx={{ 
+                position: 'fixed', 
+                top: '10px', 
+                left: '10px', 
+                zIndex: 1400, 
+                borderRadius: '50%', 
+                padding: '8px', 
+                boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.2)' // Add shadow for better visibility
+              }} 
             >
               <MenuIcon sx={{ color: '#f98053' }} />
             </IconButton>

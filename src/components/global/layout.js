@@ -20,8 +20,6 @@ const Layout = ({ children }) => {
           minHeight: '100vh',
           paddingTop: '64px', 
           paddingBottom: '110px',
-          paddingLeft: isMobile ? theme.spacing(2) : 0,
-          paddingRight: isMobile ? theme.spacing(2) : 0,
           overflowX: 'hidden',
         }}
       >

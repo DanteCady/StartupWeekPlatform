@@ -2,8 +2,13 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import DashboardSideBar from '../../components/dashboard/dashboardSideBar';
 import Events from '../../components/dashboard/eventsComponent';
+import { useMediaQuery, useTheme } from '@mui/material';
 
-const DashboardPage = ({ registrantId }) => {
+const DashboardPage = () => {
+	
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
 	return (
 		<Box
 			sx={{
@@ -19,7 +24,7 @@ const DashboardPage = ({ registrantId }) => {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
-					alignItems: 'flex-start',
+					alignItems: isMobile? 'center' : 'flex-start',
 				}}
 			>
 				<Typography variant="h4">Events</Typography>
