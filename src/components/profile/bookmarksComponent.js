@@ -38,11 +38,8 @@ const Bookmarks = () => {
 	return (
 		<Box
 			sx={{
-				display: 'flex',
 				flexDirection: 'column',
 				alignItems: 'center',
-				paddingTop: '64px',
-				paddingBottom: 8,
 				overflowX: 'hidden',
 			}}
 		>
