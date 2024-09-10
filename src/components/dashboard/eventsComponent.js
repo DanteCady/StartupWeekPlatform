@@ -7,7 +7,6 @@ import {
 	IconButton,
 	ToggleButtonGroup,
 	ToggleButton,
-	CircularProgress,
 	Button,
 	Pagination,
 } from '@mui/material';
@@ -25,8 +24,9 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
 import RegistrationModal from '../global/modal';
-import useEventRegistration from '../../hooks/eventRegistration';
+import registerForEvent from '../../hooks/eventRegistration';
 import moment from 'moment-timezone';
+import axios from 'axios';
 
 const Events = () => {
 	const [view, setView] = useState('list'); // State to toggle between list and grid view
@@ -36,35 +36,61 @@ const Events = () => {
 	const [openModal, setOpenModal] = useState(false); // Modal visibility state
 	const [modalMode, setModalMode] = useState('info'); // Default modal mode
 	const [selectedEventId, setSelectedEventId] = useState(null); // To store selected event ID
-	const {
-		registerForEvent,
-		loading: regLoading,
-		error: regError,
-	} = useEventRegistration(); // Use the registration hook
 	const [bookmarkedEvents, setBookmarkedEvents] = useState([]); // State for bookmarked events
+	const [registrantId, setRegistrantId] = useState(null); // State for registrantId
 
+	const usersEndpoint = process.env.REACT_APP_USER_ENDPOINT;
 
-	// Handle bookmarking
-	const toggleBookmark = (eventId) => {
-		let updatedBookmarks;
-		if (bookmarkedEvents.includes(eventId)) {
-			// If event is already bookmarked, remove it
-			updatedBookmarks = bookmarkedEvents.filter(id => id !== eventId);
-		} else {
-			// If event is not bookmarked, add it
-			updatedBookmarks = [...bookmarkedEvents, eventId];
-		}
-		setBookmarkedEvents(updatedBookmarks);
-		localStorage.setItem('bookmarkedEvents', JSON.stringify(updatedBookmarks)); // Save to localStorage
-	};
-
-	// Load bookmarks from localStorage when component mounts
+	// Fetch registrantId from localStorage when the component mounts
 	useEffect(() => {
-		const storedBookmarks = localStorage.getItem('bookmarkedEvents');
-		if (storedBookmarks) {
-			setBookmarkedEvents(JSON.parse(storedBookmarks));
+		const storedRegistrantId = localStorage.getItem('event_registrant_id');
+		if (storedRegistrantId) {
+			setRegistrantId(storedRegistrantId);
 		}
 	}, []);
+
+	// Ensure that no request is made until registrantId is set
+	useEffect(() => {
+		if (registrantId) {
+			const fetchBookmarks = async () => {
+				try {
+					const response = await axios.get(`${usersEndpoint}/bookmarks/${registrantId}`);
+					setBookmarkedEvents(response.data.map((bookmark) => bookmark.eventId));
+				} catch (error) {
+					console.error('Error fetching bookmarks:', error);
+				}
+			};
+
+			fetchBookmarks();
+		}
+	}, [registrantId, usersEndpoint]);
+
+	// Handle bookmarking
+	const toggleBookmark = async (eventId) => {
+		if (!registrantId) {
+			console.error('Registrant ID is missing');
+			return;
+		}
+
+		let updatedBookmarks;
+		try {
+			if (bookmarkedEvents.includes(eventId)) {
+				// If event is already bookmarked, remove it
+				await axios.delete(`${usersEndpoint}/bookmarks/${registrantId}/${eventId}`);
+				updatedBookmarks = bookmarkedEvents.filter((id) => id !== eventId);
+			} else {
+				// If event is not bookmarked, add it
+				await axios.post(`${usersEndpoint}/bookmarks`, {
+					registrantId,
+					eventId,
+				});
+				updatedBookmarks = [...bookmarkedEvents, eventId];
+			}
+			setBookmarkedEvents(updatedBookmarks);
+		} catch (error) {
+			console.error('Error updating bookmarks:', error);
+		}
+	};
 
 
 	// Pagination state
@@ -91,7 +117,7 @@ const Events = () => {
 
 	// Handle registration form submission
 	const handleRegistrationSubmit = async (registrantId) => {
-		const result = await registerForEvent(selectedEventId, { registrantId }); // Call the hook with the selected event and registration ID
+		const result =  registerForEvent(selectedEventId, { registrantId }); // Call the hook with the selected event and registration ID
 		if (result.success) {
 			alert(result.message);
 		} else {
@@ -105,11 +131,6 @@ const Events = () => {
 			setView(newView);
 		}
 	};
-
-	// Show loading spinner while fetching events
-	if (loading) {
-		return <CircularProgress />;
-	}
 
 	// Show a message when no events are available
 	if (!loading && events.length === 0) {
@@ -241,10 +262,6 @@ const Events = () => {
 					const formattedTime = eventDateTime.format('h:mm A'); // 12-hour format with AM/PM
 					const formattedEndTime = eventEndTime.format('h:mm A'); // 12-hour format with AM/PM
 
-					// Construct the registration URL for the event
-					const registrationURLLink = process.env.REACT_APP_CHECKIN_URL;
-					const registrationUrl =  `${registrationURLLink}=${event.eventId}/check-in`;
-
 					return (
 						<Card
 							key={event.eventId}
@@ -370,17 +387,17 @@ const Events = () => {
 
 										{/* Bookmark and Share Icons */}
 										<Box sx={{ display: 'flex', gap: 1 }}>
-										<IconButton onClick={() => toggleBookmark(event.id)}>
-											{bookmarkedEvents.includes(event.id) ? (
-												<BookmarkIcon sx={{ color: '#f98053' }} />
-											) : (
-												<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-											)}
-										</IconButton>
-										<IconButton>
-											<ShareIcon sx={{ color: '#252b4e' }} />
-										</IconButton>
-									</Box>
+											<IconButton onClick={() => toggleBookmark(event.eventId)}>
+												{bookmarkedEvents.includes(event.eventId) ? (
+													<BookmarkIcon sx={{ color: '#f98053' }} />
+												) : (
+													<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
+												)}
+											</IconButton>
+											<IconButton>
+												<ShareIcon sx={{ color: '#252b4e' }} />
+											</IconButton>
+										</Box>
 									</Box>
 								)}
 							</CardContent>

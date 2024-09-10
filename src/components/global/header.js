@@ -13,6 +13,7 @@ const Header = () => {
 	// Check authentication status when the component mounts
 	useEffect(() => {
 		const authStatus = localStorage.getItem('event_authentication_status');
+		const registrantId = localStorage.getItem('event_registrant_id');
 		if (authStatus === 'authenticated') {
 			setIsAuthenticated(true);
 		}
