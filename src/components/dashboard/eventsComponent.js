@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Box,
 	Typography,
@@ -19,6 +19,7 @@ import {
 	ViewModuleOutlinedIcon,
 	ViewListOutlinedIcon,
 	CalendarMonthIcon,
+	BookmarkIcon,
 } from '../../assets/icons';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
@@ -40,6 +41,31 @@ const Events = () => {
 		loading: regLoading,
 		error: regError,
 	} = useEventRegistration(); // Use the registration hook
+	const [bookmarkedEvents, setBookmarkedEvents] = useState([]); // State for bookmarked events
+
+
+	// Handle bookmarking
+	const toggleBookmark = (eventId) => {
+		let updatedBookmarks;
+		if (bookmarkedEvents.includes(eventId)) {
+			// If event is already bookmarked, remove it
+			updatedBookmarks = bookmarkedEvents.filter(id => id !== eventId);
+		} else {
+			// If event is not bookmarked, add it
+			updatedBookmarks = [...bookmarkedEvents, eventId];
+		}
+		setBookmarkedEvents(updatedBookmarks);
+		localStorage.setItem('bookmarkedEvents', JSON.stringify(updatedBookmarks)); // Save to localStorage
+	};
+
+	// Load bookmarks from localStorage when component mounts
+	useEffect(() => {
+		const storedBookmarks = localStorage.getItem('bookmarkedEvents');
+		if (storedBookmarks) {
+			setBookmarkedEvents(JSON.parse(storedBookmarks));
+		}
+	}, []);
+
 
 	// Pagination state
 	const [currentPage, setCurrentPage] = useState(1);
@@ -344,13 +370,17 @@ const Events = () => {
 
 										{/* Bookmark and Share Icons */}
 										<Box sx={{ display: 'flex', gap: 1 }}>
-											<IconButton>
+										<IconButton onClick={() => toggleBookmark(event.id)}>
+											{bookmarkedEvents.includes(event.id) ? (
+												<BookmarkIcon sx={{ color: '#f98053' }} />
+											) : (
 												<BookmarkBorderOutlinedIcon sx={{ color: '#252b4e' }} />
-											</IconButton>
-											<IconButton>
-												<ShareIcon sx={{ color: '#252b4e' }} />
-											</IconButton>
-										</Box>
+											)}
+										</IconButton>
+										<IconButton>
+											<ShareIcon sx={{ color: '#252b4e' }} />
+										</IconButton>
+									</Box>
 									</Box>
 								)}
 							</CardContent>
