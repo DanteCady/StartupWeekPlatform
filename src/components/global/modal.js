@@ -6,12 +6,12 @@ import { CloseIcon } from '../../assets/icons';
 const RegistrationModal = ({
 	open,
 	onClose,
-	mode = 'info', // 'info' or 'register'
+	mode = 'info', // 'info', 'register', or 'signin'
 	registrantId = '',
 	onSubmit, // Function to handle form submission
 }) => {
 	const navigate = useNavigate();
-	const [inputId, setInputId] = useState(''); // For handling user input in 'register' mode
+	const [inputId, setInputId] = useState(''); // For handling user input in 'register' or 'signin' mode
 
 	// Function to copy the registration ID to clipboard (for 'info' mode)
 	const handleCopy = () => {
@@ -22,15 +22,15 @@ const RegistrationModal = ({
 	// Function to handle close and navigate to events
 	const handleClose = () => {
 		onClose();
-		navigate('/events'); // Navigate to '/events'
+		navigate('/events'); // Navigate to '/events' (or other pages depending on use case)
 	};
 
-	// Handle registration form submission (for 'register' mode)
-	const handleRegisterSubmit = () => {
+	// Handle form submission (for 'register' or 'signin' mode)
+	const handleSubmit = () => {
 		if (onSubmit) {
 			onSubmit(inputId); // Pass the input ID to the parent component's handler
 		}
-		onClose();
+		onClose(); // Close the modal
 	};
 
 	return (
@@ -84,8 +84,7 @@ const RegistrationModal = ({
 								fontSize: '0.75rem',
 							}}
 						>
-							Please copy and save your registration ID. You will need it to register
-							for events throughout the week.
+							Please copy and save your registration ID. You will need it to register for events throughout the week.
 						</Typography>
 					</>
 				)}
@@ -107,11 +106,37 @@ const RegistrationModal = ({
 						<Button
 							variant="contained"
 							color="primary"
-							onClick={handleRegisterSubmit}
+							onClick={handleSubmit}
 							fullWidth
 							disabled={!inputId} // Disable button if input is empty
 						>
 							Register
+						</Button>
+					</>
+				)}
+
+				{/* Sign-in Form for entering registrant ID */}
+				{mode === 'signin' && (
+					<>
+						<Typography variant="h6" sx={{ marginBottom: 2 }}>
+							Sign In
+						</Typography>
+						<TextField
+							label="Enter Your Registrant ID"
+							variant="outlined"
+							value={inputId}
+							onChange={(e) => setInputId(e.target.value)}
+							fullWidth
+							sx={{ marginBottom: 2 }}
+						/>
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={handleSubmit}
+							fullWidth
+							disabled={!inputId} // Disable button if input is empty
+						>
+							Sign In
 						</Button>
 					</>
 				)}
