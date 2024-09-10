@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Drawer, Divider, IconButton, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { sidebarMenuItems } from '../../constants/index';
@@ -9,6 +9,7 @@ const Sidebar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
   const [open, setOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication status
 
   // Define heights of the header and footer
   const headerHeight = '80px'; 
@@ -22,18 +23,37 @@ const Sidebar = () => {
     setOpen(!open);
   };
 
+  // Check authentication status when the component mounts
+  useEffect(() => {
+    const authStatus = localStorage.getItem('event_authentication_status');
+    if (authStatus === 'authenticated') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Filter sidebar items based on authentication status
+  const filteredMenuItems = sidebarMenuItems.filter(item => {
+    // Show the "Profile" link only if the user is authenticated
+    if (item.title === 'Profile' && !isAuthenticated) {
+      return false;
+    }
+    return true;
+  });
+
   const drawerContent = (
     <>
       {/* Close Button in the Drawer (only on mobile) */}
       {isMobile && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end',}}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={toggleDrawer}>
             <CloseIcon sx={{ color: '#f98053' }} />
           </IconButton>
         </Box>
       )}
+
+      {/* Sidebar menu items */}
       <List>
-        {sidebarMenuItems.map((menuItem, index) => (
+        {filteredMenuItems.map((menuItem, index) => (
           <React.Fragment key={index}>
             <ListItem button component={Link} to={menuItem.link} onClick={toggleDrawer}>
               <ListItemIcon>
@@ -41,7 +61,7 @@ const Sidebar = () => {
               </ListItemIcon>
               <ListItemText primary={menuItem.title} />
             </ListItem>
-            {index < sidebarMenuItems.length - 1 && <Divider />} {/* Add a divider between links */}
+            {index < filteredMenuItems.length - 1 && <Divider />} {/* Add a divider between links */}
           </React.Fragment>
         ))}
       </List>
@@ -52,7 +72,6 @@ const Sidebar = () => {
     <>
       {isMobile ? (
         <>
-          {/* Only show the MenuIcon when the Drawer is closed */}
           {!open && (
             <IconButton
               edge="start"

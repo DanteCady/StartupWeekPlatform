@@ -32,6 +32,15 @@ const Header = () => {
 	// Function to handle sign-in form submission
 	const handleSignInSubmit = async (registrantId) => {
 		await signIn(registrantId); // Use the signIn function from hook
+		setIsAuthenticated(true);  // Update authentication status after sign-in
+		window.location.reload(); // Refresh the page
+	};
+
+	// Function to handle sign-out
+	const handleSignOut = () => {
+		localStorage.removeItem('event_authentication_status'); // Clear local storage
+		setIsAuthenticated(false); // Update state
+		window.location.reload(); // Refresh the page
 	};
 
 	return (
@@ -60,8 +69,16 @@ const Header = () => {
 						padding: '0 20px',
 					}}
 				>
-					{/* Only show sign-in button if not authenticated */}
-					{!isAuthenticated && (
+					{/* If authenticated, show sign-out button; otherwise, show sign-in button */}
+					{isAuthenticated ? (
+						<Box>
+							<Button onClick={handleSignOut}>
+								<Typography variant="h6" sx={{ color: 'white', mr: 3 }}>
+									Sign Out
+								</Typography>
+							</Button>
+						</Box>
+					) : (
 						<Box
 							sx={{
 								display: 'flex',

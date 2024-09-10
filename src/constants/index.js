@@ -7,11 +7,11 @@ export const sidebarMenuItems = [
         icon: InsertInvitationIcon,
         link: '/events',
     },
-    // {
-    //     title: 'Profile',
-    //     icon: AccountBoxIcon,
-    //     link: '/profile',
-    // }
+    {
+        title: 'Profile',
+        icon: AccountBoxIcon,
+        link: '/profile',
+    }
 ]
 
 // Sample event data
