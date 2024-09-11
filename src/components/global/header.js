@@ -4,14 +4,13 @@ import RegistrationModal from '../global/modal';
 import useSignIn from '../../hooks/signIn';
 import { QrCodeScannerIcon } from '../../assets/icons';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { Html5Qrcode } from 'html5-qrcode'; // Import QR scanner
+import QrReader from 'react-qr-scanner';
 
 const Header = () => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState('signin');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [qrScannerOpen, setQrScannerOpen] = useState(false);
-    const [qrScannerInstance, setQrScannerInstance] = useState(null);
+    const [modalMode, setModalMode] = useState('signin'); // State to control the mode ('signin', 'register', or 'info')
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication status
+    const [qrScannerOpen, setQrScannerOpen] = useState(false); // State for QR scanner visibility
 
     const { signIn, loading, error } = useSignIn();
     const theme = useTheme();
@@ -20,6 +19,7 @@ const Header = () => {
     // Check authentication status when the component mounts
     useEffect(() => {
         const authStatus = localStorage.getItem('event_authentication_status');
+        const registrantId = localStorage.getItem('event_registrant_id');
         if (authStatus === 'authenticated') {
             setIsAuthenticated(true);
         }
@@ -38,73 +38,36 @@ const Header = () => {
 
     // Function to handle sign-in form submission
     const handleSignInSubmit = async (registrantId) => {
-        await signIn(registrantId);
-        setIsAuthenticated(true);
-        window.location.reload();
+        await signIn(registrantId); // Use the signIn function from hook
+        setIsAuthenticated(true); // Update authentication status after sign-in
+        window.location.reload(); // Refresh the page
     };
 
     // Function to handle sign-out
     const handleSignOut = () => {
-        localStorage.removeItem('event_authentication_status');
-        setIsAuthenticated(false);
-        window.location.reload();
+        localStorage.removeItem('event_authentication_status'); // Clear local storage
+        setIsAuthenticated(false); // Update state
+        window.location.reload(); // Refresh the page
     };
 
-    // Function to handle QR code scanning
-    const handleScanSuccess = (decodedText) => {
-        console.log('Scanned QR code data:', decodedText);
-        setQrScannerOpen(false); // Close QR scanner after successful scan
+    // Function to handle QR code scanning success
+    const handleScanSuccess = (data) => {
+        if (data) {
+            console.log('Scanned QR code data:', data.text);
+            setQrScannerOpen(false); // Close QR scanner after successful scan
+        }
     };
 
-    const handleError = (error) => {
-        console.error('Error scanning QR code:', error);
-        alert('There was an issue accessing your camera. Please try again.');
+    // Function to handle QR code scanning error
+    const handleError = (err) => {
+        console.error('Error scanning QR code:', err);
         setQrScannerOpen(false); // Close QR scanner on error
     };
 
-    // Function to stop the scanner
-    const stopQrScanner = async () => {
-        if (qrScannerInstance) {
-            try {
-                await qrScannerInstance.stop();
-                console.log("Camera stopped.");
-                setQrScannerInstance(null);
-            } catch (err) {
-                console.error("Failed to stop camera:", err);
-            }
-        }
-    };
-
     // Function to toggle QR scanner visibility
-    const toggleQrScanner = async () => {
-        if (qrScannerOpen) {
-            await stopQrScanner();
-            setQrScannerOpen(false);
-        } else {
-            setQrScannerOpen(true);
-        }
+    const toggleQrScanner = () => {
+        setQrScannerOpen(!qrScannerOpen);
     };
-
-    useEffect(() => {
-        if (qrScannerOpen && !qrScannerInstance) {
-            const qrScanner = new Html5Qrcode("qr-reader");
-            qrScanner.start(
-                { facingMode: "environment" }, // Use the environment camera on mobile
-                { fps: 10, qrbox: 250 },
-                handleScanSuccess,
-                handleError
-            ).catch(err => {
-                console.error("Failed to start QR scanner:", err);
-                setQrScannerOpen(false);
-            });
-
-            setQrScannerInstance(qrScanner);
-        }
-
-        return () => {
-            stopQrScanner(); // Clean up the scanner when component unmounts
-        };
-    }, [qrScannerOpen, qrScannerInstance]);
 
     return (
         <>
@@ -182,6 +145,7 @@ const Header = () => {
                 </Box>
             </Box>
 
+            {/* QR Scanner */}
             {qrScannerOpen && (
                 <Box
                     sx={{
@@ -197,7 +161,12 @@ const Header = () => {
                         zIndex: 2000,
                     }}
                 >
-                    <div id="qr-reader" style={{ width: '300px' }}></div>
+                    <QrReader
+                        delay={300}
+                        onError={handleError}
+                        onScan={handleScanSuccess}
+                        style={{ width: '100%' }}
+                    />
                     <Button
                         variant="contained"
                         color="error"
@@ -209,11 +178,12 @@ const Header = () => {
                 </Box>
             )}
 
+            {/* Registration/Sign-In Modal */}
             <RegistrationModal
                 open={modalOpen}
                 onClose={handleCloseModal}
-                mode={modalMode}
-                onSubmit={handleSignInSubmit}
+                mode={modalMode} // Set mode to 'signin' or other modes dynamically
+                onSubmit={handleSignInSubmit} // Handle sign-in submission
             />
 
             {loading && (
