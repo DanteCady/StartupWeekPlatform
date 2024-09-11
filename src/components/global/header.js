@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, IconButton } from '@mui/material';
+import { Box, Button, Typography, IconButton, Link } from '@mui/material';
 import RegistrationModal from '../global/modal';
 import useSignIn from '../../hooks/signIn';
 import { QrCodeScannerIcon } from '../../assets/icons';
@@ -8,15 +8,15 @@ import QrReader from 'react-qr-scanner';
 
 const Header = () => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState('signin'); // State to control the mode ('signin', 'register', or 'info')
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication status
-    const [qrScannerOpen, setQrScannerOpen] = useState(false); // State for QR scanner visibility
+    const [modalMode, setModalMode] = useState('signin');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [qrScannerOpen, setQrScannerOpen] = useState(false);
+    const [scannedData, setScannedData] = useState(null); // Store scanned QR data
 
     const { signIn, loading, error } = useSignIn();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    // Check authentication status when the component mounts
     useEffect(() => {
         const authStatus = localStorage.getItem('event_authentication_status');
         const registrantId = localStorage.getItem('event_registrant_id');
@@ -25,46 +25,41 @@ const Header = () => {
         }
     }, []);
 
-    // Function to open the modal in sign-in mode
     const handleOpenSignIn = () => {
         setModalMode('signin');
         setModalOpen(true);
     };
 
-    // Function to close the modal
     const handleCloseModal = () => {
         setModalOpen(false);
     };
 
-    // Function to handle sign-in form submission
     const handleSignInSubmit = async (registrantId) => {
-        await signIn(registrantId); // Use the signIn function from hook
-        setIsAuthenticated(true); // Update authentication status after sign-in
-        window.location.reload(); // Refresh the page
+        await signIn(registrantId);
+        setIsAuthenticated(true);
+        window.location.reload();
     };
 
-    // Function to handle sign-out
     const handleSignOut = () => {
-        localStorage.removeItem('event_authentication_status'); // Clear local storage
-        setIsAuthenticated(false); // Update state
-        window.location.reload(); // Refresh the page
+        localStorage.removeItem('event_authentication_status');
+        setIsAuthenticated(false);
+        window.location.reload();
     };
 
     // Function to handle QR code scanning success
     const handleScanSuccess = (data) => {
         if (data) {
-            console.log('Scanned QR code data:', data.text);
-            setQrScannerOpen(false); // Close QR scanner after successful scan
+            setScannedData(data.text); // Save the scanned QR code
+            setQrScannerOpen(false); // Close the QR scanner
         }
     };
 
     // Function to handle QR code scanning error
     const handleError = (err) => {
         console.error('Error scanning QR code:', err);
-        setQrScannerOpen(false); // Close QR scanner on error
+        setQrScannerOpen(false);
     };
 
-    // Function to toggle QR scanner visibility
     const toggleQrScanner = () => {
         setQrScannerOpen(!qrScannerOpen);
     };
@@ -166,6 +161,9 @@ const Header = () => {
                         onError={handleError}
                         onScan={handleScanSuccess}
                         style={{ width: '100%' }}
+                        constraints={{
+                            facingMode: 'environment', // Use rear camera by default
+                        }}
                     />
                     <Button
                         variant="contained"
@@ -178,12 +176,34 @@ const Header = () => {
                 </Box>
             )}
 
+            {/* Display the scanned data as a clickable link */}
+            {scannedData && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: '#fff',
+                        padding: '10px 20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+                    }}
+                >
+                    <Typography variant="body1">
+                        <Link href={scannedData} target="_blank" rel="noopener noreferrer">
+                            {scannedData}
+                        </Link>
+                    </Typography>
+                </Box>
+            )}
+
             {/* Registration/Sign-In Modal */}
             <RegistrationModal
                 open={modalOpen}
                 onClose={handleCloseModal}
-                mode={modalMode} // Set mode to 'signin' or other modes dynamically
-                onSubmit={handleSignInSubmit} // Handle sign-in submission
+                mode={modalMode}
+                onSubmit={handleSignInSubmit}
             />
 
             {loading && (
