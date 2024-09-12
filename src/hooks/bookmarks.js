@@ -17,7 +17,7 @@ const useBookmarks = (registrantId) => {
 				setBookmarkedEvents(response.data); 
 			} catch (err) {
 				console.error('Error fetching bookmarks:', err);
-				setError('Failed to load bookmarks');
+				setError('No Events Bookmarked');
 			}
 		};
 
