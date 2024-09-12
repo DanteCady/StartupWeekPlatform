@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Box, TextField, Button } from '@mui/material';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme, Typography } from '@mui/material';
+import useCreateEvent from '../../hooks/createEvent'; // Custom hook for event creation
 
 const CreateEvent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,6 +18,8 @@ const CreateEvent = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if it's mobile view
+
+  const { createEvent, loading, error, success } = useCreateEvent(); // Using the custom hook
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +36,7 @@ const CreateEvent = () => {
       startTime: startTime,
       endTime: endTime,
     };
-    console.log('Event created:', eventData);
+    createEvent(eventData); // Call the hook to submit the event
   };
 
   return (
@@ -108,7 +111,7 @@ const CreateEvent = () => {
                 )}
               />
             </LocalizationProvider>
-              <br />
+            <br />
             {/* End Time Picker */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <TimePicker
@@ -150,9 +153,14 @@ const CreateEvent = () => {
             color="primary"
             sx={{ marginTop: 3 }}
             onClick={handleSubmit}
+            disabled={loading} // Disable button while loading
           >
-            Create Event
+            {loading ? 'Creating Event...' : 'Create Event'}
           </Button>
+
+          {/* Display error or success messages */}
+          {error && <Typography color="error" sx={{ marginTop: 2 }}>{error}</Typography>}
+          {success && <Typography color="success" sx={{ marginTop: 2 }}>Event created successfully!</Typography>}
         </Box>
       </Box>
     </Box>

@@ -14,7 +14,7 @@ const useCreateEvent = () => {
     setSuccess(false);
     
     try {
-      const response = await axios.post(`${eventsEndpoint}`, eventData);
+      const response = await axios.post(`${eventsEndpoint}/create`, eventData);
 
       if (response.status === 201) {
         setSuccess(true);

@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { MenuIcon, CloseIcon } from '../../assets/icons';
 
-const Sidebar = ({ menuItems }) => {
+const Sidebar = ({ menuItems = [] }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
   const [open, setOpen] = useState(false);

@@ -1,5 +1,7 @@
 const express = require('express'); // Express web server framework
 const router = express.Router(); // Express router
+const crypto = require('crypto');
+const moment = require('moment-timezone');
 
 // Module exports function that takes a database pool as an argument and returns the router object
 module.exports = (databasePool) => {
@@ -115,44 +117,53 @@ module.exports = (databasePool) => {
 
 	// Create a new event
 	async function createEvent(req, res) {
-		// Function to generate eventId in the format: rsw-event-{random 6 characters}
-		function generateEventId() {
-			return `rsw-event-${crypto.randomBytes(3).toString('hex')}`; // Generates a 6 character string
-		}
-		const { title, description, image, date, startTime, endTime } = req.body;
+        // Function to generate eventId in the format: rsw-event-{random 6 characters}
+        function generateEventId() {
+            return `rsw-event-${crypto.randomBytes(3).toString('hex')}`; // Generates a 6 character string
+        }
 
-		if (!title || !date || !startTime || !endTime) {
-			return res
-				.status(400)
-				.json({
-					error: 'Missing required fields: title, date, startTime, or endTime',
-				});
-		}
+        const { title, description, image, date, startTime, endTime } = req.body;
 
-		const eventId = generateEventId(); // Generate eventId
+        if (!title || !date || !startTime || !endTime) {
+            return res.status(400).json({
+                error: 'Missing required fields: title, date, startTime, or endTime',
+            });
+        }
 
-		try {
-			const query = `
-            INSERT INTO events (eventId, title, description, image, date, startTime, endTime)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        `;
+        const eventId = generateEventId(); // Generate eventId
 
-			await databasePool.query(query, [
-				eventId,
-				title,
-				description,
-				image,
-				date,
-				startTime,
-				endTime,
-			]);
+        // Convert date to YYYY-MM-DD in EST
+        const formattedDate = moment.tz(date, "America/New_York").format("YYYY-MM-DD");
 
-			res.status(201).json({ message: 'Event created successfully', eventId });
-		} catch (error) {
-			console.error('Error creating event:', error);
-			res.status(500).json({ error: 'Error creating event' });
-		}
-	}
+        // Convert startTime and endTime to HH:MM:SS in EST
+        const formattedStartTime = moment.tz(startTime, "America/New_York").format("HH:mm:ss");
+        const formattedEndTime = moment.tz(endTime, "America/New_York").format("HH:mm:ss");
+
+        try {
+            const query = `
+                INSERT INTO events (eventId, title, description, image, date, startTime, endTime)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            await databasePool.query(query, [
+                eventId,
+                title,
+                description,
+                image,
+                formattedDate,        // Use the formatted date in EST
+                formattedStartTime,    // Use the formatted start time in EST (HH:MM:SS)
+                formattedEndTime,      // Use the formatted end time in EST (HH:MM:SS)
+            ]);
+
+            res.status(201).json({ message: 'Event created successfully', eventId });
+        } catch (error) {
+            console.error('Error creating event:', error);
+            res.status(500).json({ error: 'Error creating event' });
+        }
+    }
+
+	
+	
 
 	return router; // Return the router object
 };
