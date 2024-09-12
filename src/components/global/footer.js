@@ -12,35 +12,25 @@ const Footer = () => {
 				width: '100%',
 				backgroundColor: '#252b4e',
 				height: '110px',
-				position: 'relative', 
+				position: 'relative',
 				bottom: 0,
 				marginTop: 'auto',
-  
 			}}
 		>
 			<Box
-      sx={{
-        ml: 5,
-      }}
-      >
-				<Link href="/events" sx={{ color: 'white' }}>
-					<Typography sx={{ color: 'white' }}>Events</Typography>
-				</Link>
-        <Link href='/my-events'>
-				<Typography sx={{ color: 'white' }}>Login</Typography>
-        </Link>
-			</Box>
-      <Box
-      sx={{
-        ml: 5,
-      }}
-      >
+				sx={{
+					ml: 5,
+				}}
+			>
 				<Link href="/administration" sx={{ color: 'white' }}>
 					<Typography sx={{ color: 'white' }}>Administration</Typography>
 				</Link>
-        <Link href='mailto:someone@example.com'>
-				<Typography sx={{ color: 'white' }}>Contact</Typography>
-        </Link>
+				<Link href="mailto:someone@example.com">
+					<Typography sx={{ color: 'white' }}>Contact</Typography>
+				</Link>
+				<Link href="/events" sx={{ color: 'white' }}>
+					<Typography sx={{ color: 'white' }}>Events</Typography>
+				</Link>
 			</Box>
 			<Box
 				sx={{
@@ -50,7 +40,7 @@ const Footer = () => {
 					justifyContent: 'center',
 					width: '100%',
 					padding: '16px',
-          mr: 5
+					mr: 5,
 				}}
 			>
 				<Typography sx={{ color: 'white' }}>
