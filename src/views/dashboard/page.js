@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import DashboardSideBar from '../../components/dashboard/dashboardSideBar';
+import LeftSideBar from '../../components/global/leftSideBar';
 import Events from '../../components/dashboard/eventsComponent';
 import { useMediaQuery, useTheme } from '@mui/material';
 
@@ -35,7 +35,7 @@ const DashboardPage = () => {
 					industry leaders.
 				</Typography>
 			</Box>
-			<DashboardSideBar />
+			<LeftSideBar />
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 				<Events />
 			</Box>

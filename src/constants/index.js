@@ -1,4 +1,4 @@
-import { AccountBoxIcon, InsertInvitationIcon } from "../assets/icons"
+import { AccountBoxIcon, InsertInvitationIcon, EventAvailableIcon, ManageAccountsIcon } from "../assets/icons"
 
 // Sidebar menu items
 export const sidebarMenuItems = [
@@ -14,6 +14,24 @@ export const sidebarMenuItems = [
     }
 ]
 
+// Sidebar menu items for the admin panel
+export const adminSidebarMenuItems = [
+  {
+      title: 'Create Event',
+      icon: EventAvailableIcon,
+      link: '/admin/create-event',
+  },
+  {
+      title: 'Manage Registrants',
+      icon: ManageAccountsIcon,
+      link: '/admin/manage-registrants',
+  },
+  {
+      title: 'Profile',
+      icon: AccountBoxIcon,
+      link: '/profile',
+  }
+];
 // Sample event data
 export const events = [
     {

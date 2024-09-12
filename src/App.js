@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from 'react-router-dom';
 
 // Views
 import Home from './views/home/page';
@@ -7,17 +12,19 @@ import Dashboard from './views/dashboard/page';
 import CheckInPage from './views/checkIn/page';
 import AdministrationPage from './views/administration/page';
 import Profile from './views/profile/page';
+import CreateEventPage from './views/administration/createEvent';
 
-
-//gloabl layout
+// Global layout
 import Layout from './components/global/layout';
 
 function App() {
-	const isAuthenticated = localStorage.getItem('event_authentication_status') === 'authenticated'; // Check if user is authenticated
+	const isAuthenticated =
+		localStorage.getItem('event_authentication_status') === 'authenticated'; // Check if user is authenticated
 
 	return (
 		<Router>
 			<Routes>
+				{/* Public Routes */}
 				<Route
 					path="/"
 					element={
@@ -42,15 +49,31 @@ function App() {
 						</Layout>
 					}
 				/>
+
+				{/* Protected Route for Admin */}
 				<Route
-					path="/administration"
+					path="/admin"
+					element={
+						isAuthenticated ? (
+							<Layout>
+								<AdministrationPage />
+							</Layout>
+						) : (
+							<Navigate to="/" replace /> // Redirect to home if not authenticated
+						)
+					}
+				/>
+				<Route
+					path="/admin/create-event"
 					element={
 						<Layout>
-							<AdministrationPage />
+							<CreateEventPage /> {/* Component for creating an event */}
 						</Layout>
 					}
 				/>
-					<Route
+
+				{/* Protected Route for Profile */}
+				<Route
 					path="/profile"
 					element={
 						isAuthenticated ? (
@@ -58,10 +81,13 @@ function App() {
 								<Profile />
 							</Layout>
 						) : (
-							<Navigate to="/" /> // Redirect to home if not authenticated
+							<Navigate to="/" replace /> // Redirect to home if not authenticated
 						)
 					}
 				/>
+
+				{/* Catch-all Route: Redirect to Home for unknown paths */}
+				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</Router>
 	);

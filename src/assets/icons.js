@@ -11,6 +11,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 export {
     CloseIcon,
@@ -26,4 +28,6 @@ export {
     BookmarkBorderOutlinedIcon,
     CalendarMonthIcon,
     QrCodeScannerIcon,
+    EventAvailableIcon,
+    ManageAccountsIcon
 }

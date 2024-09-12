@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
-import DashboardSideBar from '../../components/dashboard/dashboardSideBar';
+import LeftSideBar from '../../components/global/leftSideBar';
 import Bookmarks from '../../components/profile/bookmarksComponent';
 import { useMediaQuery, useTheme } from '@mui/material';
 
@@ -46,7 +46,7 @@ const ProfilePage = () => {
 						growth and success. Revisit these events and continue your journey
 						towards innovation and collaboration.
 					</Typography>
-					<DashboardSideBar />
+					<LeftSideBar />
 				</Box>
 
 				{/* Bookmarks area */}

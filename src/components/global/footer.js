@@ -22,7 +22,7 @@ const Footer = () => {
 					ml: 5,
 				}}
 			>
-				<Link href="/administration" sx={{ color: 'white' }}>
+				<Link href="/admin" sx={{ color: 'white' }}>
 					<Typography sx={{ color: 'white' }}>Administration</Typography>
 				</Link>
 				<Link href="mailto:someone@example.com">
