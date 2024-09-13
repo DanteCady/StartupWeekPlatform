@@ -36,38 +36,34 @@ module.exports = (databasePool) => {
 
 	// Register for an event
 	async function registerForEvent(req, res) {
-		const { eventId, registrantId } = req.body; // Get eventId and registrantId from the request body
-
-		if (!eventId || !registrantId) {
-			return res.status(400).json({ error: 'Missing eventId or registrantId' }); // Validate input
+		const { eventId, registrantId } = req.body;
+	
+		// Validate the input data
+		if (!eventId || typeof eventId !== 'string' || !registrantId || typeof registrantId !== 'string') {
+			return res.status(400).json({ error: 'Invalid or missing eventId or registrantId' });
 		}
-
+	
 		try {
 			// Check if the registrant has already registered for the event
-			const checkQuery =
-				'SELECT * FROM events_registrations WHERE eventId = ? AND registrantId = ?';
-			const [existingRegistration] = await databasePool.query(checkQuery, [
-				eventId,
-				registrantId,
-			]);
-
+			const checkQuery = 'SELECT * FROM events_registrations WHERE eventId = ? AND registrantId = ?';
+			const [existingRegistration] = await databasePool.query(checkQuery, [eventId, registrantId]);
+	
 			if (existingRegistration.length > 0) {
-				return res
-					.status(400)
-					.json({ error: 'You have already registered for this event' }); // Registration already exists
+				return res.status(400).json({ error: 'You have already registered for this event' });
 			}
-
+	
 			// Insert the new registration if not already registered
-			const query =
-				'INSERT INTO events_registrations (eventId, registrantId, registrationDate) VALUES (?, ?, NOW())';
-			await databasePool.query(query, [eventId, registrantId]); // Execute the query
-
-			res.status(201).json({ message: 'Registration successful' }); // Send success response
+			const query = 'INSERT INTO events_registrations (eventId, registrantId, registrationDate) VALUES (?, ?, NOW())';
+			await databasePool.query(query, [eventId, registrantId]);
+	
+			return res.status(201).json({ message: 'Registration successful' });
+	
 		} catch (error) {
-			console.error('Error registering for the event:', error); // Log the error
-			res.status(500).json({ error: 'Error registering for the event' }); // Send error response
+			console.error('Error registering for the event:', error);
+			return res.status(500).json({ error: 'An internal server error occurred during registration' });
 		}
 	}
+	
 
 	// Function to handle event check-in
 	async function checkInToEvent(req, res) {

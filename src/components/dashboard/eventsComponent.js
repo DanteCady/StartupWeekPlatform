@@ -24,7 +24,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { useFetchEvents } from '../../hooks/fetchEvents';
 import QRCode from '../../components/dashboard/qr';
 import RegistrationModal from '../global/modal';
-import registerForEvent from '../../hooks/eventRegistration';
+import {useEventRegistration} from '../../hooks/eventRegistration';
 import moment from 'moment-timezone';
 import axios from 'axios';
 
@@ -40,6 +40,7 @@ const Events = () => {
 	const [registrantId, setRegistrantId] = useState(null); // State for registrantId
 
 	const usersEndpoint = process.env.REACT_APP_USER_ENDPOINT;
+	const { registerForEvent } = useEventRegistration();
 
 	// Fetch registrantId from localStorage when the component mounts
 	useEffect(() => {
@@ -117,13 +118,13 @@ const Events = () => {
 
 	// Handle registration form submission
 	const handleRegistrationSubmit = async (registrantId) => {
-		const result =  registerForEvent(selectedEventId, { registrantId }); // Call the hook with the selected event and registration ID
+		const result = await registerForEvent(selectedEventId, { registrantId });
 		if (result.success) {
-			alert(result.message);
+		  alert(result.message);
 		} else {
-			alert(result.message);
+		  alert(result.message);
 		}
-	};
+	  };
 
 	// Handle view change (list or grid)
 	const handleViewChange = (event, newView) => {

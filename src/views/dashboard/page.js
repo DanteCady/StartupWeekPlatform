@@ -1,8 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import LeftSideBar from '../../components/global/leftSideBar';
+import Sidebar from '../../components/global/leftSideBar';
 import Events from '../../components/dashboard/eventsComponent';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { sidebarMenuItems } from '../../constants';
 
 const DashboardPage = () => {
 	
@@ -35,7 +36,7 @@ const DashboardPage = () => {
 					industry leaders.
 				</Typography>
 			</Box>
-			<LeftSideBar />
+			<Sidebar menuItems={sidebarMenuItems} />
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 				<Events />
 			</Box>

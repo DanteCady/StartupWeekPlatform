@@ -12,6 +12,8 @@ module.exports = (databasePool) => {
     router.delete('/bookmarks', deleteBookmark);
     router.get('/bookmarks/:registrantId', getBookmarks);
     router.get('/registrants', getRegistrants);    
+    router.get('/registrants/:registrantId/events', getEventsForRegistrant); // New route
+
     // ################ Route Handlers ################ //
 	// ############################################ //
   
@@ -68,16 +70,14 @@ module.exports = (databasePool) => {
     
             const [rows] = await databasePool.query(query, [registrantId]);
     
-            if (rows.length === 0) {
-                return res.status(404).json({ message: 'No bookmarked events found for this user' });
-            }
-    
-            res.status(200).json(rows); // Send the rows with event details as the response
+            // Return an empty array if no bookmarked events found
+            res.status(200).json(rows);
         } catch (err) {
-            console.error('Error getting bookmarks:', err);
+            console.error(`Error getting bookmarks for registrantId ${registrantId}:`, err);
             res.status(500).json({ message: 'Internal server error' });
         }
     }
+    
     
     // Function to get all registrants with pagination and check-in count
 	async function getRegistrants(req, res) {
@@ -119,6 +119,24 @@ module.exports = (databasePool) => {
 			res.status(500).json({ error: 'Error fetching registrants' }); // Send an error response
 		}
 	}
+ // Function to get events for a particular registrant
+ async function getEventsForRegistrant(req, res) {
+    const { registrantId } = req.params;
+
+    try {
+      const query = `
+        SELECT e.eventId, e.title, e.description, e.date, e.startTime, e.endTime
+        FROM events e
+        JOIN events_registrations er ON e.eventId = er.eventId
+        WHERE er.registrantId = ?`;
+
+      const [events] = await databasePool.query(query, [registrantId]);
+      res.status(200).json({ events });
+    } catch (err) {
+      console.error('Error fetching events for registrant:', err);
+      res.status(500).json({ error: 'Error fetching events' });
+    }
+  }
 
 
     return router

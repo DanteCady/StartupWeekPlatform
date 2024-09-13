@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
-import LeftSideBar from '../../components/global/leftSideBar';
+import Sidebar from '../../components/global/leftSideBar';
 import Bookmarks from '../../components/profile/bookmarksComponent';
 import { useMediaQuery, useTheme } from '@mui/material';
-
+import { sidebarMenuItems } from '../../constants';
 const ProfilePage = () => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -46,7 +46,7 @@ const ProfilePage = () => {
 						growth and success. Revisit these events and continue your journey
 						towards innovation and collaboration.
 					</Typography>
-					<LeftSideBar />
+					<Sidebar menuItems={sidebarMenuItems} />
 				</Box>
 
 				{/* Bookmarks area */}
