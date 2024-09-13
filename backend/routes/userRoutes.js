@@ -13,6 +13,7 @@ module.exports = (databasePool) => {
     router.get('/bookmarks/:registrantId', getBookmarks);
     router.get('/registrants', getRegistrants);    
     router.get('/registrants/:registrantId/events', getEventsForRegistrant); // New route
+    router.get('/registrants/:registrantId/check-ins', getCheckInsForRegistrant);
 
     // ################ Route Handlers ################ //
 	// ############################################ //
@@ -124,19 +125,46 @@ module.exports = (databasePool) => {
     const { registrantId } = req.params;
 
     try {
-      const query = `
-        SELECT e.eventId, e.title, e.description, e.date, e.startTime, e.endTime
-        FROM events e
-        JOIN events_registrations er ON e.eventId = er.eventId
-        WHERE er.registrantId = ?`;
+        const query = `
+            SELECT 
+                events.eventId, events.title, events.description, events.date, events.startTime, events.endTime
+            FROM events 
+            JOIN events_registrations ON events.eventId = events_registrations.eventId
+            WHERE events_registrations.registrantId = ?
+        `;
 
-      const [events] = await databasePool.query(query, [registrantId]);
-      res.status(200).json({ events });
+        const [events] = await databasePool.query(query, [registrantId]);
+
+        // Return an empty array if no events are found
+        res.status(200).json({ events: events || [] });
     } catch (err) {
-      console.error('Error fetching events for registrant:', err);
-      res.status(500).json({ error: 'Error fetching events' });
+        console.error('Error fetching events for registrant:', err);
+        res.status(500).json({ error: 'Error fetching events' });
     }
-  }
+}
+
+
+async function getCheckInsForRegistrant(req, res) {
+    const { registrantId } = req.params;
+
+    try {
+        const query = `
+            SELECT 
+                events.eventId, events.title, events.date, events.startTime, events.endTime
+            FROM events
+            JOIN events_checkins ON events.eventId = events_checkins.eventId
+            WHERE events_checkins.registrantId = ?
+        `;
+
+        const [checkIns] = await databasePool.query(query, [registrantId]);
+
+        // Return an empty array if no check-ins are found
+        res.status(200).json({ checkIns: checkIns || [] });
+    } catch (err) {
+        console.error('Error fetching check-ins for registrant:', err);
+        res.status(500).json({ error: 'Error fetching check-ins' });
+    }
+}
 
 
     return router

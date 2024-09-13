@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import useFetchRegistrants from '../../hooks/getRegistrants';
+import moment from 'moment-timezone'; // Import moment for formatting
 
 const AdminRegistrantsComponent = () => {
   const [page, setPage] = useState(0);
@@ -109,15 +110,20 @@ const AdminRegistrantsComponent = () => {
                           </TableHead>
                           <TableBody>
                             {checkInDetails[registrant.registrantId] && checkInDetails[registrant.registrantId].length > 0 ? (
-                              checkInDetails[registrant.registrantId].map((event) => (
-                                <TableRow key={event.eventId}>
-                                  <TableCell>{event.eventId}</TableCell>
-                                  <TableCell>{event.title}</TableCell>
-                                  <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
-                                  <TableCell>{event.startTime}</TableCell>
-                                  <TableCell>{event.endTime}</TableCell>
-                                </TableRow>
-                              ))
+                              checkInDetails[registrant.registrantId].map((event) => {
+                                const formattedDate = moment(event.date).format('MM/DD/YYYY');
+                                const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
+                                const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
+                                return (
+                                  <TableRow key={event.eventId}>
+                                    <TableCell>{event.eventId}</TableCell>
+                                    <TableCell>{event.title}</TableCell>
+                                    <TableCell>{formattedDate}</TableCell>
+                                    <TableCell>{formattedStartTime}</TableCell>
+                                    <TableCell>{formattedEndTime}</TableCell>
+                                  </TableRow>
+                                );
+                              })
                             ) : (
                               <TableRow>
                                 <TableCell colSpan={5}>No check-ins found.</TableCell>
@@ -142,15 +148,20 @@ const AdminRegistrantsComponent = () => {
                           </TableHead>
                           <TableBody>
                             {registeredEventDetails[registrant.registrantId] && registeredEventDetails[registrant.registrantId].length > 0 ? (
-                              registeredEventDetails[registrant.registrantId].map((event) => (
-                                <TableRow key={event.eventId}>
-                                  <TableCell>{event.eventId}</TableCell>
-                                  <TableCell>{event.title}</TableCell>
-                                  <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
-                                  <TableCell>{event.startTime}</TableCell>
-                                  <TableCell>{event.endTime}</TableCell>
-                                </TableRow>
-                              ))
+                              registeredEventDetails[registrant.registrantId].map((event) => {
+                                const formattedDate = moment(event.date).format('MM/DD/YYYY');
+                                const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
+                                const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
+                                return (
+                                  <TableRow key={event.eventId}>
+                                    <TableCell>{event.eventId}</TableCell>
+                                    <TableCell>{event.title}</TableCell>
+                                    <TableCell>{formattedDate}</TableCell>
+                                    <TableCell>{formattedStartTime}</TableCell>
+                                    <TableCell>{formattedEndTime}</TableCell>
+                                  </TableRow>
+                                );
+                              })
                             ) : (
                               <TableRow>
                                 <TableCell colSpan={5}>No registered events found.</TableCell>

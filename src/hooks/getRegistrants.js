@@ -6,7 +6,8 @@ const useFetchRegistrants = (page, rowsPerPage) => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [eventDetails, setEventDetails] = useState({}); // Store event details for registrants
+  const [checkInDetails, setCheckInDetails] = useState({}); // To store check-ins per registrant
+  const [registeredEventDetails, setRegisteredEventDetails] = useState({}); // To store registered events per registrant
 
   const usersEndpoint = process.env.REACT_APP_USER_ENDPOINT;
 
@@ -17,7 +18,7 @@ const useFetchRegistrants = (page, rowsPerPage) => {
       try {
         const response = await axios.get(`${usersEndpoint}/registrants`, {
           params: {
-            page: page,
+            page,
             limit: rowsPerPage,
           },
         });
@@ -34,20 +35,34 @@ const useFetchRegistrants = (page, rowsPerPage) => {
   }, [page, rowsPerPage, usersEndpoint]);
 
   const fetchEventDetails = async (registrantId) => {
-    if (!eventDetails[registrantId]) {
-      try {
-        const response = await axios.get(`${usersEndpoint}/registrants/${registrantId}/events`);
-        setEventDetails((prevDetails) => ({
-          ...prevDetails,
-          [registrantId]: response.data.events, // Cache the event data
-        }));
-      } catch (err) {
-        setError(err.message || 'Error fetching event details');
-      }
+    try {
+      // Fetch check-ins
+      const checkInResponse = await axios.get(`${usersEndpoint}/registrants/${registrantId}/check-ins`);
+      setCheckInDetails((prevDetails) => ({
+        ...prevDetails,
+        [registrantId]: checkInResponse.data.checkIns,
+      }));
+
+      // Fetch registered events
+      const eventResponse = await axios.get(`${usersEndpoint}/registrants/${registrantId}/events`);
+      setRegisteredEventDetails((prevDetails) => ({
+        ...prevDetails,
+        [registrantId]: eventResponse.data.events,
+      }));
+    } catch (err) {
+      setError(err.message || 'Error fetching event details');
     }
   };
 
-  return { registrants, totalCount, loading, error, fetchEventDetails, eventDetails };
+  return {
+    registrants,
+    totalCount,
+    loading,
+    error,
+    fetchEventDetails,
+    checkInDetails,
+    registeredEventDetails,
+  };
 };
 
 export default useFetchRegistrants;
