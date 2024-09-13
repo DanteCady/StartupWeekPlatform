@@ -1,3 +1,4 @@
+const { ro } = require('date-fns/locale');
 const express = require('express'); // Express web server framework
 const router = express.Router(); // Express router
 
@@ -7,10 +8,10 @@ module.exports = (databasePool) => {
 	// ################ Routes ################ //
 	// ############################################ //
 
-    // Route to handle user sign-in
     router.post('/bookmarks', createBookmark);
     router.delete('/bookmarks', deleteBookmark);
     router.get('/bookmarks/:registrantId', getBookmarks);
+    router.get('/registrants', getRegistrants);    
     // ################ Route Handlers ################ //
 	// ############################################ //
   
@@ -78,7 +79,47 @@ module.exports = (databasePool) => {
         }
     }
     
-    
+    // Function to get all registrants with pagination and check-in count
+	async function getRegistrants(req, res) {
+		const { page = 0, limit = 10 } = req.query; // Default to page 0, limit 10
+
+		try {
+			// Query to get registrants and check-in count (number of events they've registered for)
+			const query = `
+				SELECT 
+					r.id,
+					r.registrantId,
+					r.firstName,
+					r.lastName,
+					r.email,
+					r.phoneNumber,
+					r.affiliation,
+					r.createdAt,
+					COUNT(er.eventId) AS checkInCount
+				FROM registrants r
+				LEFT JOIN events_registrations er ON r.registrantId = er.registrantId
+				GROUP BY r.id
+				ORDER BY r.createdAt DESC
+				LIMIT ?, ?`; // Pagination query
+
+			// Execute the query with pagination (offset and limit)
+			const [rows] = await databasePool.query(query, [parseInt(page) * parseInt(limit), parseInt(limit)]);
+
+			// Query to get the total number of registrants for pagination purposes
+			const [totalRows] = await databasePool.query('SELECT COUNT(*) as totalCount FROM registrants');
+			const totalCount = totalRows[0].totalCount;
+
+			// Send the registrants data and total count back to the client
+			res.status(200).json({
+				registrants: rows,
+				totalCount: totalCount,
+			});
+		} catch (error) {
+			console.error('Error fetching registrants:', error); // Log the error
+			res.status(500).json({ error: 'Error fetching registrants' }); // Send an error response
+		}
+	}
+
 
     return router
 }

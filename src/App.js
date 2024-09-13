@@ -13,6 +13,7 @@ import CheckInPage from './views/checkIn/page';
 import AdministrationPage from './views/administration/page';
 import Profile from './views/profile/page';
 import CreateEventPage from './views/administration/createEvent';
+import ManageRegistrantsPage from './views/administration/manageRegistrants';
 
 // Global layout
 import Layout from './components/global/layout';
@@ -68,6 +69,14 @@ function App() {
 					element={
 						<Layout>
 							<CreateEventPage /> {/* Component for creating an event */}
+						</Layout>
+					}
+				/>
+				<Route
+					path="/admin/manage-registrants"
+					element={
+						<Layout>
+							<ManageRegistrantsPage /> {/* Component for managing registrants */}
 						</Layout>
 					}
 				/>
