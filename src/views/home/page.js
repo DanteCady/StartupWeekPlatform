@@ -5,6 +5,8 @@ import { eventRegistrationForm } from '../../utils/formConfiguration';
 import { useTheme } from '@mui/material/styles';
 import { SubmitForm } from '../../hooks/submitForm';
 import RegistrationModal from '../../components/global/modal';
+import Logo from '../../assets/2023-RI-startup-week-logo.png';
+import { Height } from '@mui/icons-material';
 
 // Page component that renders the event registration form
 const HomePage = () => {
@@ -67,6 +69,21 @@ const HomePage = () => {
 						textAlign: isMobile ? 'center' : 'left',
 					}}
 				>
+					<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center'
+					}}
+					>
+						<img
+							src={Logo}
+							alt="Startup Week Logo"
+							style={{
+								height: '150px',
+								width: '250px',
+							}}
+						/>
+					</Box>
 					<Typography
 						variant="h4"
 						gutterBottom
