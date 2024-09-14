@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios'; 
 
 const useUserEvents = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // Default to an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,7 +23,7 @@ const useUserEvents = () => {
       try {
         // Fetch events from the endpoint using Axios
         const response = await axios.get(`${eventsEndpoint}/${userId}`);
-        setEvents(response.data);
+        setEvents(response.data.length > 0 ? response.data : []); // Set events or empty array if no data
         setLoading(false);
       } catch (err) {
         // Handle errors, either from the request or the response

@@ -158,36 +158,42 @@ module.exports = (databasePool) => {
         }
     }
 
-    // Get events by userId
-    async function getEventsByUser(req, res) {
-        const { userId } = req.params;
+// Get events by userId
+async function getEventsByUser(req, res) {
+    const { userId } = req.params;
 
-        if (!userId) {
-            return res.status(400).json({ error: 'Missing userId' });
-        }
-
-        try {
-            // First, get all the eventIds the user is registered for
-            const query = `
-                SELECT e.*
-                FROM events_registrations er
-                JOIN events e ON er.eventId = e.eventId
-                WHERE er.registrantId = ?
-                ORDER BY e.date ASC, e.startTime ASC
-            `;
-
-            const [events] = await databasePool.query(query, [userId]);
-
-            if (events.length === 0) {
-                return res.status(404).json({ error: 'No events found for this user' });
-            }
-
-            return res.status(200).json(events);
-        } catch (error) {
-            console.error('Error fetching events for user:', error);
-            return res.status(500).json({ error: 'Error fetching events for user' });
-        }
+    // Validate that userId is provided
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId' });
     }
+
+    try {
+        // Query to get all events the user is registered for
+        const query = `
+            SELECT e.*
+            FROM events_registrations er
+            JOIN events e ON er.eventId = e.eventId
+            WHERE er.registrantId = ?
+            ORDER BY e.date ASC, e.startTime ASC
+        `;
+
+        // Execute the query
+        const [events] = await databasePool.query(query, [userId]);
+
+        // Return an empty array if no events are found (instead of 404)
+        if (events.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // Return the events if found
+        return res.status(200).json(events);
+
+    } catch (error) {
+        console.error('Error fetching events for user:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching events' });
+    }
+}
+
 
     return router; 
 };
