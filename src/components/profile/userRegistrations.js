@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, TablePagination, CircularProgress, Typography
+  Paper, TablePagination, CircularProgress, Typography, useMediaQuery, useTheme
 } from '@mui/material';
 import useUserEvents from '../../hooks/getRegistrations'; 
 import moment from 'moment-timezone'; // Import moment for formatting
@@ -10,6 +10,9 @@ const UserRegistrationsTable = ({ userId }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   // Fetch the registered events for the user
   const { events, loading, error } = useUserEvents(userId);
 
@@ -41,7 +44,7 @@ const UserRegistrationsTable = ({ userId }) => {
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="user registrations table">
+        <Table sx={{ minWidth: isMobile ? 300 : 650 }} aria-label="user registrations table">
           <TableHead>
             <TableRow>
               <TableCell>Event ID</TableCell>

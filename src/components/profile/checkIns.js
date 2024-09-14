@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useMediaQuery, useTheme } from '@mui/material';
-import RegistrationsTable from './userRegistrations';
+import CheckInsTable from './userCheckIn';
 
-const RegistrationComponent = () => {
+const CheckInComponent = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -19,13 +19,13 @@ const RegistrationComponent = () => {
       }}
     >
       <Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2.125rem' }}>
-        Your Registrations
+        Your Check-Ins
       </Typography>
       <Box sx={{ marginTop: isMobile ? '16px' : '32px' }}>
-        <RegistrationsTable />
+        <CheckInsTable />
       </Box>
     </Box>
   );
 };
 
-export default RegistrationComponent;
+export default CheckInComponent;

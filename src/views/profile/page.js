@@ -3,6 +3,7 @@ import { Box, Typography, Grid } from '@mui/material';
 import Sidebar from '../../components/global/leftSideBar';
 import Bookmarks from '../../components/profile/bookmarksComponent';
 import EventRegistrations from '../../components/profile/registrations';
+import EventCheckIns from '../../components/profile/checkIns';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { sidebarMenuItems } from '../../constants';
 
@@ -67,6 +68,7 @@ const ProfilePage = () => {
 							}}
 						>
 							<EventRegistrations />
+							<EventCheckIns />
 						</Box>
 					</Grid>
 

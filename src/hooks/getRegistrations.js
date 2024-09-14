@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios'; 
 
-// Custom hook to fetch events by userId
-const useUserEvents = (userId) => {
+const useUserEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,7 +9,10 @@ const useUserEvents = (userId) => {
   const eventsEndpoint = process.env.REACT_APP_EVENTS_ENDPOINT;
 
   useEffect(() => {
-    // If userId is not provided, return early
+    // Get the userId from localStorage
+    const userId = localStorage.getItem('event_registrant_id');
+
+    // If userId is not found in localStorage, return early
     if (!userId) {
       setLoading(false);
       return;
@@ -18,22 +21,19 @@ const useUserEvents = (userId) => {
     const fetchUserEvents = async () => {
       setLoading(true);
       try {
-        // Fetch events from the endpoint
-        const response = await fetch(`${eventsEndpoint}/${userId}`);
-        if (!response.ok) {
-          throw new Error(`Error fetching events: ${response.statusText}`);
-        }
-        const data = await response.json();
-        setEvents(data); // Set the events data
+        // Fetch events from the endpoint using Axios
+        const response = await axios.get(`${eventsEndpoint}/${userId}`);
+        setEvents(response.data);
         setLoading(false);
       } catch (err) {
-        setError(err.message);
+        // Handle errors, either from the request or the response
+        setError(err.response?.data?.message || err.message);
         setLoading(false);
       }
     };
 
     fetchUserEvents();
-  }, [userId]);
+  }, [eventsEndpoint]);
 
   return { events, loading, error };
 };

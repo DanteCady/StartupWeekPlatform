@@ -13,7 +13,7 @@ module.exports = (databasePool) => {
     router.get('/bookmarks/:registrantId', getBookmarks);
     router.get('/registrants', getRegistrants);    
     router.get('/registrants/:registrantId/events', getEventsForRegistrant); // New route
-    router.get('/registrants/:registrantId/check-ins', getCheckInsForRegistrant);
+    router.get('/:registrantId/check-ins', getCheckInsForRegistrant);
 
     // ################ Route Handlers ################ //
 	// ############################################ //
