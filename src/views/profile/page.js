@@ -2,8 +2,10 @@ import React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import Sidebar from '../../components/global/leftSideBar';
 import Bookmarks from '../../components/profile/bookmarksComponent';
+import EventRegistrations from '../../components/profile/registrations';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { sidebarMenuItems } from '../../constants';
+
 const ProfilePage = () => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -49,14 +51,26 @@ const ProfilePage = () => {
 					<Sidebar menuItems={sidebarMenuItems} />
 				</Box>
 
-				{/* Bookmarks area */}
+				{/* Grid container for content layout */}
 				<Grid container spacing={2}>
-					{/* Empty spacing for larger screens */}
-					{!isMobile && (
-						<Grid item xs={8}>
-							{/* Empty to create spacing */}
-						</Grid>
-					)}
+					{/* EventRegistrations area on the left */}
+					<Grid item xs={isMobile ? 12 : 8}>
+						<Box
+							sx={{
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								width: '100%',
+								borderBottom: !isMobile ? 1 : 0, // Only show the border on larger screens
+								borderColor: 'divider',
+								borderRadius: 1,
+							}}
+						>
+							<EventRegistrations />
+						</Box>
+					</Grid>
+
+					{/* Bookmarks area on the right */}
 					<Grid item xs={isMobile ? 12 : 4}>
 						<Box
 							sx={{
