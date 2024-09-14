@@ -14,7 +14,7 @@ module.exports = (databasePool) => {
     router.get('/registrants', getRegistrants);    
     router.get('/registrants/:registrantId/events', getEventsForRegistrant); // New route
     router.get('/:registrantId/check-ins', getCheckInsForRegistrant);
-
+    
     // ################ Route Handlers ################ //
 	// ############################################ //
   

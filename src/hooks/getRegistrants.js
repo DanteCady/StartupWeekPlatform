@@ -37,7 +37,7 @@ const useFetchRegistrants = (page, rowsPerPage) => {
   const fetchEventDetails = async (registrantId) => {
     try {
       // Fetch check-ins
-      const checkInResponse = await axios.get(`${usersEndpoint}/registrants/${registrantId}/check-ins`);
+      const checkInResponse = await axios.get(`${usersEndpoint}/${registrantId}/check-ins`);
       setCheckInDetails((prevDetails) => ({
         ...prevDetails,
         [registrantId]: checkInResponse.data.checkIns,
