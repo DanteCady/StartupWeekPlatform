@@ -41,7 +41,7 @@ const ProfilePage = () => {
 						maxWidth: '100vw',
 					}}
 				>
-					<Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>
+					<Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold' }}>
 						Profile
 					</Typography>
 					<Typography
