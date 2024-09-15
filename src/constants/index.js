@@ -2,11 +2,11 @@ import { AccountBoxIcon, InsertInvitationIcon, EventAvailableIcon, ManageAccount
 
 // Sidebar menu items
 export const sidebarMenuItems = [
-    {
-        title: 'Events',
-        icon: InsertInvitationIcon,
-        link: '/events',
-    },
+    // {
+    //     title: 'Events',
+    //     icon: InsertInvitationIcon,
+    //     link: '/events',
+    // },
     {
         title: 'Profile',
         icon: AccountBoxIcon,

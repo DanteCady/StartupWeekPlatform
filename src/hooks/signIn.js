@@ -22,7 +22,7 @@ const useSignIn = () => {
       // Handle successful sign-in
       localStorage.setItem('event_authentication_status', 'authenticated');
       localStorage.setItem('event_registrant_id', registrantId);
-      navigate('/events');
+      navigate('/profile');
       console.log('Signed in successfully:', response.data);
     } catch (err) {
       // Handle any errors from axios
