@@ -18,7 +18,13 @@ const RegistrationComponent = () => {
         flexDirection: 'column',
       }}
     >
-      <Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2.125rem' }}>
+      <Typography 
+      variant="h4" 
+      sx={{ 
+        fontSize: isMobile ? '1.5rem' : '2.125rem',
+        display: 'flex',
+        justifyContent: isMobile ? 'left' : 'center',
+        }}>
         Your Registrations
       </Typography>
       <Box sx={{ marginTop: isMobile ? '16px' : '32px' }}>

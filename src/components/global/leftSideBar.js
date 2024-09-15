@@ -13,7 +13,7 @@ const Sidebar = ({ menuItems = [] }) => {
 
   // Define heights of the header and footer
   const headerHeight = '80px'; 
-  const footerHeight = '150px'; 
+  const footerHeight = '250px'; 
 
   // Calculate available height for the sidebar (between header and footer)
   const availableHeight = `calc(100vh - ${headerHeight} - ${footerHeight})`;
