@@ -17,31 +17,32 @@ const ProfilePage = () => {
 			sx={{
 				paddingTop: '64px',
 				paddingBottom: 8,
-				overflowX: 'hidden', 
-				width: '100vw', 
+				overflowX: 'hidden',
+				width: '100%',
+				display: 'flex',
+				justifyContent: 'center', 
 			}}
 		>
-			{/* Flex container to manage content and bookmarks */}
 			<Box
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
 					alignItems: 'center',
 					width: '100%',
+					maxWidth: isMobile ? '100%' : '1200px', // Limit max width on desktop
 				}}
 			>
 				{/* Full-width content area */}
 				<Box
 					sx={{
-						width: '100%', 
+						width: '100%',
 						marginBottom: 3,
-						alignItems: isMobile ? 'center' : 'flex-start',
+						alignItems: 'center',
 						display: 'flex',
 						flexDirection: 'column',
-						maxWidth: '100vw',
 					}}
 				>
-					<Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold' }}>
+					<Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold', textAlign: 'center' }}>
 						Profile
 					</Typography>
 					<Typography
@@ -50,7 +51,7 @@ const ProfilePage = () => {
 						sx={{
 							marginBottom: 3,
 							fontSize: isMobile ? '.875rem' : '1.25rem',
-							textAlign: isMobile ? 'center' : 'left',
+							textAlign: 'center',
 							padding: isMobile ? '0 16px' : '0',
 							maxWidth: '100%', 
 						}}
@@ -65,7 +66,7 @@ const ProfilePage = () => {
 				</Box>
 
 				{/* Grid container for content layout */}
-				<Grid container sx={{ width: '100%', margin: 0 }}>
+				<Grid container sx={{ width: '100%', margin: 0, justifyContent: 'center' }}>
 					{/* EventRegistrations area */}
 					<Grid item xs={12}>
 						<Box
@@ -75,12 +76,12 @@ const ProfilePage = () => {
 								alignItems: 'center',
 								justifyContent: 'center',
 								width: '100%',
-								borderBottom: !isMobile ? 1 : 0, 
+								borderBottom: !isMobile ? 1 : 0,
 								borderColor: 'divider',
 								borderRadius: 1,
 								padding: isMobile ? 1 : 2,
-								overflowX: 'hidden', 
-								maxWidth: '100%', 
+								maxWidth: '100%',
+								overflowX: 'hidden', // Prevent horizontal scrolling
 							}}
 						>
 							<EventsComponent />
