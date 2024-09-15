@@ -4,15 +4,19 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 const Footer = () => {
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
 	return (
 		<Box
 			sx={{
 				width: '100%',
 				background: 'linear-gradient(90deg, #252b4e, #4a5681)',
 				color: '#fff',
-				padding: '40px 0',
+				padding: isMobile ? '20px 0' : '40px 0', 
 				mt: 'auto',
 			}}
 		>
@@ -20,10 +24,10 @@ const Footer = () => {
 			<Box
 				sx={{
 					display: 'flex',
-					flexDirection: 'row',
+					flexDirection: isMobile ? 'column' : 'row', // Stack on mobile
 					alignItems: 'center',
 					justifyContent: 'center',
-					gap: 4,
+					gap: isMobile ? 2 : 4,
 					mb: 4,
 				}}
 			>
@@ -105,13 +109,18 @@ const Footer = () => {
 					flexDirection: 'column',
 					alignItems: 'center',
 					textAlign: 'center',
+					px: isMobile ? 2 : 0, 
 				}}
 			>
-				<Typography sx={{ color: 'white', mb: 1, fontSize: '14px' }}>
+				<Typography sx={{ color: 'white', mb: 1, fontSize: isMobile ? '12px' : '14px' }}>
 					&copy; {new Date().getFullYear()} Rhode Island Startup Week
 				</Typography>
 				<Typography
-					sx={{ color: 'white', fontSize: '12px', maxWidth: '600px' }}
+					sx={{
+						color: 'white',
+						fontSize: isMobile ? '10px' : '12px', 
+						maxWidth: '600px',
+					}}
 				>
 					Created by{' '}
 					<Link

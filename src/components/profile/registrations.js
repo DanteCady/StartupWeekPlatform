@@ -16,6 +16,7 @@ const RegistrationComponent = () => {
         overflowX: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',  
       }}
     >
       <Typography 

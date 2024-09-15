@@ -56,7 +56,7 @@ const handleScanSuccess = async (data) => {
 		// Close the QR scanner
 		setQrScannerOpen(false);
 
-		// Use the scanned data directly as the eventId, no need to parse as JSON
+		// Use the scanned data directly as the eventId
 		const eventId = data.text; 
 
 		if (eventId && registrantId) {
@@ -97,6 +97,7 @@ const handleScanSuccess = async (data) => {
 					height: '80px',
 					position: 'fixed',
 					zIndex: 1000,
+					
 				}}
 			>
 				<Box
@@ -116,7 +117,7 @@ const handleScanSuccess = async (data) => {
 							{isMobile && (
 								<IconButton
 									onClick={toggleQrScanner}
-									sx={{ color: 'white', mb: 1 }} // Add margin to move it above "Sign Out"
+									sx={{ color: 'white', mb: 1 }} 
 								>
 									<QrCodeScannerIcon />
 								</IconButton>
