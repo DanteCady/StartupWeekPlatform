@@ -60,121 +60,131 @@ const AdminRegistrantsComponent = () => {
               <TableCell>Email</TableCell>
               <TableCell>Phone Number</TableCell>
               <TableCell>Affiliation</TableCell>
-              <TableCell>Check-Ins</TableCell>
-              <TableCell>Registered</TableCell>
+              <TableCell>Total Check-Ins</TableCell> {/* New Column for Total Check-Ins */}
+              <TableCell>Total Registered Events</TableCell> {/* New Column for Total Registered Events */}
+              <TableCell>Registration Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {registrants.map((registrant) => (
-              <React.Fragment key={registrant.id}>
-                <TableRow>
-                  <TableCell>
-                    <IconButton
-                      aria-label="expand row"
-                      size="small"
-                      onClick={() => handleExpandClick(registrant.registrantId)}
-                    >
-                      {expandedRow === registrant.registrantId ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>{registrant.registrantId}</TableCell>
-                  <TableCell>{registrant.firstName}</TableCell>
-                  <TableCell>{registrant.lastName}</TableCell>
-                  <TableCell>{registrant.email}</TableCell>
-                  <TableCell>{registrant.phoneNumber}</TableCell>
-                  <TableCell>{registrant.affiliation}</TableCell>
-                  
-                  {/* Check-ins Column */}
-                  <TableCell>{registrant.checkIns}</TableCell>
-                  <TableCell>{new Date(registrant.createdAt).toLocaleDateString()}</TableCell>
-                </TableRow>
+            {registrants.map((registrant) => {
+              const totalCheckIns = checkInDetails[registrant.registrantId]?.length || 0; // Total check-ins
+              const totalRegisteredEvents = registeredEventDetails[registrant.registrantId]?.length || 0; // Total registered events
 
-                {/* Expanded row for check-ins and registered events */}
-                <TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
-                    <Collapse in={expandedRow === registrant.registrantId} timeout="auto" unmountOnExit>
-                      <Box margin={2}>
-                        {/* Check-Ins Section */}
-                        <Typography variant="h6" gutterBottom>
-                          Check-Ins for {registrant.firstName} {registrant.lastName}
-                        </Typography>
-                        <Table size="small" aria-label="check-ins">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Event ID</TableCell>
-                              <TableCell>Title</TableCell>
-                              <TableCell>Date</TableCell>
-                              <TableCell>Start Time</TableCell>
-                              <TableCell>End Time</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {checkInDetails[registrant.registrantId] && checkInDetails[registrant.registrantId].length > 0 ? (
-                              checkInDetails[registrant.registrantId].map((event) => {
-                                const formattedDate = moment(event.date).format('MM/DD/YYYY');
-                                const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
-                                const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
-                                return (
-                                  <TableRow key={event.eventId}>
-                                    <TableCell>{event.eventId}</TableCell>
-                                    <TableCell>{event.title}</TableCell>
-                                    <TableCell>{formattedDate}</TableCell>
-                                    <TableCell>{formattedStartTime}</TableCell>
-                                    <TableCell>{formattedEndTime}</TableCell>
-                                  </TableRow>
-                                );
-                              })
-                            ) : (
-                              <TableRow>
-                                <TableCell colSpan={5}>No check-ins found.</TableCell>
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
+              return (
+                <React.Fragment key={registrant.id}>
+                  <TableRow>
+                    <TableCell>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => handleExpandClick(registrant.registrantId)}
+                      >
+                        {expandedRow === registrant.registrantId ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>{registrant.registrantId}</TableCell>
+                    <TableCell>{registrant.firstName}</TableCell>
+                    <TableCell>{registrant.lastName}</TableCell>
+                    <TableCell>{registrant.email}</TableCell>
+                    <TableCell>{registrant.phoneNumber}</TableCell>
+                    <TableCell>{registrant.affiliation}</TableCell>
+                    
+                    {/* Total Check-Ins Column */}
+                    <TableCell>{totalCheckIns}</TableCell> 
 
-                        {/* Registered Events Section */}
-                        <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
-                          Registered Events for {registrant.firstName} {registrant.lastName}
-                        </Typography>
-                        <Table size="small" aria-label="registered events">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Event ID</TableCell>
-                              <TableCell>Title</TableCell>
-                              <TableCell>Date</TableCell>
-                              <TableCell>Start Time</TableCell>
-                              <TableCell>End Time</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {registeredEventDetails[registrant.registrantId] && registeredEventDetails[registrant.registrantId].length > 0 ? (
-                              registeredEventDetails[registrant.registrantId].map((event) => {
-                                const formattedDate = moment(event.date).format('MM/DD/YYYY');
-                                const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
-                                const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
-                                return (
-                                  <TableRow key={event.eventId}>
-                                    <TableCell>{event.eventId}</TableCell>
-                                    <TableCell>{event.title}</TableCell>
-                                    <TableCell>{formattedDate}</TableCell>
-                                    <TableCell>{formattedStartTime}</TableCell>
-                                    <TableCell>{formattedEndTime}</TableCell>
-                                  </TableRow>
-                                );
-                              })
-                            ) : (
+                    {/* Total Registered Events Column */}
+                    <TableCell>{totalRegisteredEvents}</TableCell> 
+
+                    <TableCell>{new Date(registrant.createdAt).toLocaleDateString()}</TableCell>
+                  </TableRow>
+
+                  {/* Expanded row for check-ins and registered events */}
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+                      <Collapse in={expandedRow === registrant.registrantId} timeout="auto" unmountOnExit>
+                        <Box margin={2}>
+                          {/* Check-Ins Section */}
+                          <Typography variant="h6" gutterBottom>
+                            Check-Ins for {registrant.firstName} {registrant.lastName}
+                          </Typography>
+                          <Table size="small" aria-label="check-ins">
+                            <TableHead>
                               <TableRow>
-                                <TableCell colSpan={5}>No registered events found.</TableCell>
+                                <TableCell>Event ID</TableCell>
+                                <TableCell>Title</TableCell>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Start Time</TableCell>
+                                <TableCell>End Time</TableCell>
                               </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Box>
-                    </Collapse>
-                  </TableCell>
-                </TableRow>
-              </React.Fragment>
-            ))}
+                            </TableHead>
+                            <TableBody>
+                              {checkInDetails[registrant.registrantId] && checkInDetails[registrant.registrantId].length > 0 ? (
+                                checkInDetails[registrant.registrantId].map((event) => {
+                                  const formattedDate = moment(event.date).format('MM/DD/YYYY');
+                                  const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
+                                  const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
+                                  return (
+                                    <TableRow key={event.eventId}>
+                                      <TableCell>{event.eventId}</TableCell>
+                                      <TableCell>{event.title}</TableCell>
+                                      <TableCell>{formattedDate}</TableCell>
+                                      <TableCell>{formattedStartTime}</TableCell>
+                                      <TableCell>{formattedEndTime}</TableCell>
+                                    </TableRow>
+                                  );
+                                })
+                              ) : (
+                                <TableRow>
+                                  <TableCell colSpan={5}>No check-ins found.</TableCell>
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+
+                          {/* Registered Events Section */}
+                          <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+                            Registered Events for {registrant.firstName} {registrant.lastName}
+                          </Typography>
+                          <Table size="small" aria-label="registered events">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Event ID</TableCell>
+                                <TableCell>Title</TableCell>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Start Time</TableCell>
+                                <TableCell>End Time</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {registeredEventDetails[registrant.registrantId] && registeredEventDetails[registrant.registrantId].length > 0 ? (
+                                registeredEventDetails[registrant.registrantId].map((event) => {
+                                  const formattedDate = moment(event.date).format('MM/DD/YYYY');
+                                  const formattedStartTime = moment(event.startTime, 'HH:mm:ss').format('hh:mm A');
+                                  const formattedEndTime = moment(event.endTime, 'HH:mm:ss').format('hh:mm A');
+                                  return (
+                                    <TableRow key={event.eventId}>
+                                      <TableCell>{event.eventId}</TableCell>
+                                      <TableCell>{event.title}</TableCell>
+                                      <TableCell>{formattedDate}</TableCell>
+                                      <TableCell>{formattedStartTime}</TableCell>
+                                      <TableCell>{formattedEndTime}</TableCell>
+                                    </TableRow>
+                                  );
+                                })
+                              ) : (
+                                <TableRow>
+                                  <TableCell colSpan={5}>No registered events found.</TableCell>
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
