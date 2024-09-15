@@ -15,7 +15,7 @@ const Header = () => {
 
 	const { signIn, loading, error } = useSignIn();
 	const theme = useTheme();
-	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if it's a mobile view
 
 	useEffect(() => {
 		const authStatus = localStorage.getItem('event_authentication_status');
@@ -91,21 +91,35 @@ const Header = () => {
 					}}
 				>
 					{isAuthenticated ? (
-						<Box sx={{ display: 'flex', alignItems: 'center' }}>
-							<Button onClick={handleSignOut}>
-								<Typography variant="h6" sx={{ color: 'white', mr: 3 }}>
-									Sign Out
-								</Typography>
-							</Button>
-
+						<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+							{/* Only show QR scanner on mobile */}
 							{isMobile && (
 								<IconButton
 									onClick={toggleQrScanner}
-									sx={{ color: 'white', ml: 1 }}
+									sx={{ color: 'white', mb: 1 }} // Add margin to move it above "Sign Out"
 								>
 									<QrCodeScannerIcon />
 								</IconButton>
 							)}
+
+							<Button
+								onClick={handleSignOut}
+								sx={{
+									padding: '4px 8px', 
+									minWidth: 'auto', 
+								}}
+							>
+								<Typography
+									variant="body2" 
+									sx={{ 
+										color: 'white',
+										fontSize: '0.875rem',
+										marginRight: isMobile ? 2 : 0,
+										}}
+								>
+									Sign Out
+								</Typography>
+							</Button>
 						</Box>
 					) : (
 						<Box
