@@ -108,7 +108,7 @@ const Footer = () => {
 				}}
 			>
 				<Typography sx={{ color: 'white', mb: 1, fontSize: '14px' }}>
-					&copy; {new Date().getFullYear()} Event Manager
+					&copy; {new Date().getFullYear()} Rhode Island Startup Week
 				</Typography>
 				<Typography
 					sx={{ color: 'white', fontSize: '12px', maxWidth: '600px' }}

@@ -34,22 +34,22 @@ function App() {
 						</Layout>
 					}
 				/>
-				<Route
+				{/* <Route
 					path="/events"
 					element={
 						<Layout>
 							<Dashboard />
 						</Layout>
 					}
-				/>
-				<Route
+				/> */}
+				{/* <Route
 					path="/register/:eventId/check-in"
 					element={
 						<Layout>
 							<CheckInPage />
 						</Layout>
 					}
-				/>
+				/> */}
 
 				{/* Protected Route for Admin */}
 				<Route
