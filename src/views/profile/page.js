@@ -53,14 +53,15 @@ const ProfilePage = () => {
 				</Box>
 
 				{/* Grid container for content layout */}
-				<Grid container spacing={2}>
+				<Grid container>
 					{/* EventRegistrations area on the left */}
-					<Grid item xs={isMobile ? 12 : 8}>
+					<Grid item xs={isMobile ? 12 : 12}>
 						<Box
 							sx={{
 								display: 'flex',
 								flexDirection: 'column',
 								alignItems: 'center',
+								justifyContent: 'center',
 								width: '100%',
 								borderBottom: !isMobile ? 1 : 0, // Only show the border on larger screens
 								borderColor: 'divider',
@@ -73,7 +74,7 @@ const ProfilePage = () => {
 					</Grid>
 
 					{/* Bookmarks area on the right */}
-					<Grid item xs={isMobile ? 12 : 4}>
+					{/* <Grid item xs={isMobile ? 12 : 4}>
 						<Box
 							sx={{
 								display: 'flex',
@@ -88,7 +89,7 @@ const ProfilePage = () => {
 						>
 							<Bookmarks />
 						</Box>
-					</Grid>
+					</Grid> */}
 				</Grid>
 			</Box>
 		</Box>
