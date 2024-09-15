@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios'; // Import Axios
+import axios from 'axios'; 
 
 const useCheckIn = () => {
     const [loading, setLoading] = useState(false);
@@ -11,17 +11,22 @@ const useCheckIn = () => {
         setError(null);
 
         try {
-            // Axios POST request
             const response = await axios.post(`${eventsEndpoint}/check-in`, {
                 eventId,
                 registrantId
             });
 
-            // Return the success message
+            // If check-in was successful, return the message
             return response.data;
         } catch (err) {
-            // Handle errors
-            setError(err.response?.data?.error || 'An unknown error occurred');
+            const errorMessage = err.response?.data?.error;
+            // If the error message is "User has already checked in for this event", return that as a response
+            if (errorMessage === 'User has already checked in for this event') {
+                return { message: errorMessage }; // Treat this as a valid response
+            }
+
+            // Handle other errors as actual errors
+            setError(errorMessage || 'An unknown error occurred');
             return null;
         } finally {
             setLoading(false);

@@ -118,7 +118,7 @@ module.exports = (databasePool) => {
             return `rsw-event-${crypto.randomBytes(3).toString('hex')}`; // Generates a 6 character string
         }
 
-        const { title, description, image, date, startTime, endTime } = req.body;
+        const { title, description, date, startTime, endTime } = req.body;
 
         if (!title || !date || !startTime || !endTime) {
             return res.status(400).json({
@@ -137,7 +137,7 @@ module.exports = (databasePool) => {
 
         try {
             const query = `
-                INSERT INTO events (eventId, title, description, image, date, startTime, endTime)
+                INSERT INTO events (eventId, title, description, date, startTime, endTime)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
 
@@ -145,7 +145,6 @@ module.exports = (databasePool) => {
                 eventId,
                 title,
                 description,
-                image,
                 formattedDate,        // Use the formatted date in EST
                 formattedStartTime,    // Use the formatted start time in EST (HH:MM:SS)
                 formattedEndTime,      // Use the formatted end time in EST (HH:MM:SS)
