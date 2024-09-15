@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, IconButton, Link } from '@mui/material';
+import { Box, Button, Typography, IconButton } from '@mui/material';
 import RegistrationModal from '../global/modal';
 import useSignIn from '../../hooks/signIn';
+import useCheckIn from '../../hooks/checkIn'; 
 import { QrCodeScannerIcon } from '../../assets/icons';
 import { useMediaQuery, useTheme } from '@mui/material';
 import QrReader from 'react-qr-scanner';
@@ -12,16 +13,19 @@ const Header = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [qrScannerOpen, setQrScannerOpen] = useState(false);
 	const [scannedData, setScannedData] = useState(null); // Store scanned QR data
+	const [registrantId, setRegistrantId] = useState(null); // Registrant ID
 
-	const { signIn, loading, error } = useSignIn();
+	const { signIn, loading: signInLoading, error: signInError } = useSignIn();
+	const { checkIn, loading: checkInLoading, error: checkInError } = useCheckIn(); // Use check-in hook
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if it's a mobile view
 
 	useEffect(() => {
 		const authStatus = localStorage.getItem('event_authentication_status');
-		const registrantId = localStorage.getItem('event_registrant_id');
-		if (authStatus === 'authenticated') {
+		const storedRegistrantId = localStorage.getItem('event_registrant_id');
+		if (authStatus === 'authenticated' && storedRegistrantId) {
 			setIsAuthenticated(true);
+			setRegistrantId(storedRegistrantId);
 		}
 	}, []);
 
@@ -47,12 +51,28 @@ const Header = () => {
 	};
 
 	// Function to handle QR code scanning success
-	const handleScanSuccess = (data) => {
-		if (data) {
-			setScannedData(data.text); // Save the scanned QR code
-			setQrScannerOpen(false); // Close the QR scanner
+const handleScanSuccess = async (data) => {
+	if (data) {
+		// Close the QR scanner
+		setQrScannerOpen(false);
+
+		// Use the scanned data directly as the eventId, no need to parse as JSON
+		const eventId = data.text; 
+
+		if (eventId && registrantId) {
+			// Trigger check-in using the extracted eventId and registrantId
+			const checkInResponse = await checkIn(eventId, registrantId);
+
+			if (checkInResponse) {
+				alert('Check-in successful');
+			} else {
+				alert('Check-in failed. Please try again.');
+			}
+		} else {
+			alert('Missing eventId or registrantId');
 		}
-	};
+	}
+};
 
 	// Function to handle QR code scanning error
 	const handleError = (err) => {
@@ -115,7 +135,7 @@ const Header = () => {
 										color: 'white',
 										fontSize: '0.875rem',
 										marginRight: isMobile ? 2 : 0,
-										}}
+									}}
 								>
 									Sign Out
 								</Typography>
@@ -190,28 +210,6 @@ const Header = () => {
 				</Box>
 			)}
 
-			{/* Display the scanned data as a clickable link */}
-			{scannedData && (
-				<Box
-					sx={{
-						position: 'fixed',
-						bottom: '20px',
-						left: '50%',
-						transform: 'translateX(-50%)',
-						backgroundColor: '#fff',
-						padding: '10px 20px',
-						borderRadius: '10px',
-						boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
-					}}
-				>
-					<Typography variant="body1">
-						<Link href={scannedData} target="_blank" rel="noopener noreferrer">
-							{scannedData}
-						</Link>
-					</Typography>
-				</Box>
-			)}
-
 			{/* Registration/Sign-In Modal */}
 			<RegistrationModal
 				open={modalOpen}
@@ -220,11 +218,17 @@ const Header = () => {
 				onSubmit={handleSignInSubmit}
 			/>
 
-			{loading && (
+			{signInLoading && (
 				<Typography sx={{ color: 'white' }}>Signing you in...</Typography>
 			)}
 
-			{error && <Typography sx={{ color: 'red' }}>Error: {error}</Typography>}
+			{signInError && <Typography sx={{ color: 'red' }}>Error: {signInError}</Typography>}
+
+			{checkInLoading && (
+				<Typography sx={{ color: 'white' }}>Checking you in...</Typography>
+			)}
+
+			{checkInError && <Typography sx={{ color: 'red' }}>Error: {checkInError}</Typography>}
 		</>
 	);
 };
