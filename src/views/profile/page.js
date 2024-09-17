@@ -87,6 +87,7 @@ const ProfilePage = () => {
 							<EventsComponent />
 							<EventRegistrations />
 							<EventCheckIns />
+							{/* <Bookmarks /> */}
 						</Box>
 					</Grid>
 				</Grid>

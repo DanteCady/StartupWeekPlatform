@@ -7,7 +7,7 @@ module.exports = (databasePool) => {
 
 	// ################ Routes ################ //
 	// ############################################ //
-
+ 
     router.post('/bookmarks', createBookmark);
     router.delete('/bookmarks', deleteBookmark);
     router.get('/bookmarks/:registrantId', getBookmarks);
@@ -64,7 +64,7 @@ module.exports = (databasePool) => {
         try {
             // Query to join `registrants_bookmarks` and `events` to get detailed event information
             const query = `
-                SELECT events.eventId, events.title, events.description, events.date, events.startTime, events.endTime, events.image
+                SELECT events.eventId, events.title, events.description, events.date, events.startTime, events.endTime, 
                 FROM registrants_bookmarks 
                 JOIN events ON registrants_bookmarks.eventId = events.eventId
                 WHERE registrants_bookmarks.registrantId = ?`;

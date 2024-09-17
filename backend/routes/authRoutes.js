@@ -14,30 +14,31 @@ module.exports = (databasePool) => {
 	// ############################################ //
   
     async function signInUser(req, res) {
-        const { registrantId } = req.body;
+        const { email } = req.body;
 
         // Check if registrantId is provided
-        if (!registrantId) {
-            return res.status(400).json({ message: 'Registrant ID is required' });
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
         }
 
         try {
             // Log the query and params for debugging
-            console.log('Executing query with registrantId:', registrantId);
+            console.log('Executing query with email:', email);
 
             // Case-insensitive query for MySQL
-            const query = 'SELECT * FROM registrants WHERE LOWER(registrantId) = LOWER(?)';
-            const [rows] = await databasePool.query(query, [registrantId]);
+            const query = 'SELECT * FROM registrants WHERE LOWER(email) = LOWER(?)';
+            const [rows] = await databasePool.query(query, [email]);
 
             // Check if the query returned any rows
             if (!rows || rows.length === 0) {
-                return res.status(404).json({ message: 'Registrant ID not found' });
+                return res.status(404).json({ message: 'email not found' });
             }
 
-            console.log('Sign In successful with Registrant ID:', registrantId);
+            console.log('Sign In successful with email:', email);
 
             // Send success response
-            return res.status(200).json({ message: 'Sign-in successful!' });
+            return res.status(200).json({ message: 'Sign-in successful!' })
+            ;
 
         } catch (error) {
             console.error('Error signing in:', error);

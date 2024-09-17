@@ -9,19 +9,19 @@ const useSignIn = () => {
   const authEndpoint = process.env.REACT_APP_AUTH_ENDPOINT;
   const navigate = useNavigate();
 
-  const signIn = async (registrantId) => {
+  const signIn = async (email) => {
     setLoading(true);
     setError(null);
 
     try {
       // API call to authenticate the registrantId using axios
       const response = await axios.post(`${authEndpoint}/sign-in`, {
-        registrantId,
+        email,
       });
 
       // Handle successful sign-in
       localStorage.setItem('event_authentication_status', 'authenticated');
-      localStorage.setItem('event_registrant_id', registrantId);
+      localStorage.setItem('event_registrant_id', email);
       navigate('/profile');
       console.log('Signed in successfully:', response.data);
     } catch (err) {

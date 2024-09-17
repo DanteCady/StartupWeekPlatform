@@ -29,7 +29,7 @@ import moment from 'moment-timezone';
 import axios from 'axios';
 
 const Events = () => {
-	const [view, setView] = useState('list'); // State to toggle between list and grid view
+	const [view, setView] = useState('grid'); // State to toggle between list and grid view
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is small
 	const { events, loading, error } = useFetchEvents(); // Use custom hook to fetch events
@@ -371,7 +371,7 @@ const Events = () => {
 										}}
 									>
 										{/* Register Button */}
-										<Button
+										{/* <Button
 											variant="contained"
 											color="primary"
 											onClick={() => handleOpenRegisterModal(event.eventId)}
@@ -384,10 +384,16 @@ const Events = () => {
 											}}
 										>
 											Register for Event
-										</Button>
+										</Button> */}
 
 										{/* Bookmark and Share Icons */}
-										<Box sx={{ display: 'flex', gap: 1 }}>
+										{/* <Box 
+										sx={{ 
+											display: 'flex', 
+											gap: 1, 
+											justifyContent: 'flex-end' , 
+											alignItems: 'flex-end'
+											}}>
 											<IconButton onClick={() => toggleBookmark(event.eventId)}>
 												{bookmarkedEvents.includes(event.eventId) ? (
 													<BookmarkIcon sx={{ color: '#f98053' }} />
@@ -398,7 +404,7 @@ const Events = () => {
 											<IconButton>
 												<ShareIcon sx={{ color: '#252b4e' }} />
 											</IconButton>
-										</Box>
+										</Box> */}
 									</Box>
 								)}
 							</CardContent>

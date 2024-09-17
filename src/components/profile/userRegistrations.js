@@ -35,7 +35,7 @@ const UserRegistrationsTable = () => {
       <Table sx={{ minWidth: 650 }} aria-label="user registrations table">
         <TableHead>
           <TableRow>
-            <TableCell>Event ID</TableCell>
+            {/* <TableCell>Event ID</TableCell> */}
             <TableCell>Title</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Start Time</TableCell>
@@ -45,7 +45,7 @@ const UserRegistrationsTable = () => {
         <TableBody>
           {events.map((event) => (
             <TableRow key={event.eventId}>
-              <TableCell>{event.eventId}</TableCell>
+              {/* <TableCell>{event.eventId}</TableCell> */}
               <TableCell>{event.title}</TableCell>
               <TableCell>{moment(event.date).format('MM/DD/YYYY')}</TableCell>
               <TableCell>{moment(event.startTime, 'HH:mm:ss').format('hh:mm A')}</TableCell>

@@ -1,3 +1,4 @@
+const e = require('express');
 const express = require('express'); // Express web server framework
 const router = express.Router(); // Express router
 
@@ -17,22 +18,24 @@ module.exports = (databasePool) => {
 		try {
 			const { firstName, lastName, email, phoneNumber, affiliation } = req.body;
 	
-			let isUnique = false;
-			let registrantId = '';
+			// let isUnique = false;
+			// let registrantId = '';
 			
-			while (!isUnique) {
-				// Generate random registration ID
-				const registrationIdNumber = Math.floor(Math.random() * 10000);
-				registrantId = `RSW-${firstName[0]}${lastName[0]}-${registrationIdNumber}`;
+			// while (!isUnique) {
+			// 	// Generate random registration ID
+			// 	const registrationIdNumber = Math.floor(Math.random() * 10000);
+			// 	registrantId = `RSW-${firstName[0]}${lastName[0]}-${registrationIdNumber}`;
 	
-				// Check if the generated registrantId already exists in the database
-				const checkQuery = 'SELECT * FROM registrants WHERE registrantId = ?';
-				const [existingRegistrant] = await databasePool.query(checkQuery, [registrantId]);
+			// 	// Check if the generated registrantId already exists in the database
+			// 	const checkQuery = 'SELECT * FROM registrants WHERE registrantId = ?';
+			// 	const [existingRegistrant] = await databasePool.query(checkQuery, [registrantId]);
 	
-				if (existingRegistrant.length === 0) {
-					isUnique = true; // If no registrant with this ID, mark as unique and break the loop
-				}
-			}
+			// 	if (existingRegistrant.length === 0) {
+			// 		isUnique = true; // If no registrant with this ID, mark as unique and break the loop
+			// 	}
+			// }
+
+			let registrantId = `${email}`
 	
 			// Insert the registrant data into the database
 			const query = 'INSERT INTO registrants (registrantId, firstName, lastName, email, phoneNumber, affiliation, createdAt) VALUES (?, ?, ?, ?, ? ,?, NOW())';

@@ -33,6 +33,7 @@ const RegistrationModal = ({
 		onClose(); // Close the modal
 	};
 
+
 	return (
 		<Modal
 			open={open}
@@ -62,7 +63,7 @@ const RegistrationModal = ({
 				</IconButton>
 
 				{/* Render different content based on the mode */}
-				{mode === 'info' && (
+				{/* {mode === 'info' && (
 					<>
 						<Typography variant="h6">Registration Successful!</Typography>
 						<Typography variant="body1" sx={{ marginTop: '1rem' }}>
@@ -87,16 +88,23 @@ const RegistrationModal = ({
 							Please copy and save your registration ID. You will need it to register for events throughout the week.
 						</Typography>
 					</>
+				)} */}
+					{mode === 'info' && (
+					<>
+						<Typography variant="h6">Registration Successful!</Typography>
+						<Typography variant="body1" sx={{ marginTop: '1rem' }}>
+							You can now close this window and sign in <strong>{registrantId}</strong>
+						</Typography>
+					</>
 				)}
-
-				{/* Registration Form for entering registration ID */}
+				{/* Registration Form for entering registration ID || Email */}
 				{mode === 'register' && (
 					<>
 						<Typography variant="h6" sx={{ marginBottom: 2 }}>
 							Register for the Event
 						</Typography>
 						<TextField
-							label="Enter Your Registration ID"
+							label="Enter Your Email Address"
 							variant="outlined"
 							value={inputId}
 							onChange={(e) => setInputId(e.target.value)}
@@ -122,7 +130,7 @@ const RegistrationModal = ({
 							Sign In
 						</Typography>
 						<TextField
-							label="Enter Your Registrant ID"
+							label="Enter Your Email Address"
 							variant="outlined"
 							value={inputId}
 							onChange={(e) => setInputId(e.target.value)}

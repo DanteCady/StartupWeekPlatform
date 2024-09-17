@@ -53,7 +53,7 @@ const CheckInsTable = ({ registrantId }) => {
       <Table sx={{ minWidth: isMobile ? 300 : 650 }} aria-label="check-ins table">
         <TableHead>
           <TableRow>
-            <TableCell>Event ID</TableCell>
+            {/* <TableCell>Event ID</TableCell> */}
             <TableCell>Title</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Start Time</TableCell>
@@ -63,7 +63,7 @@ const CheckInsTable = ({ registrantId }) => {
         <TableBody>
           {checkIns.map((checkIn) => (
             <TableRow key={checkIn.eventId}>
-              <TableCell>{checkIn.eventId}</TableCell>
+              {/* <TableCell>{checkIn.eventId}</TableCell> */}
               <TableCell>{checkIn.title}</TableCell>
               <TableCell>{moment(checkIn.date).format('MM/DD/YYYY')}</TableCell>
               <TableCell>{moment(checkIn.startTime, 'HH:mm:ss').format('hh:mm A')}</TableCell>

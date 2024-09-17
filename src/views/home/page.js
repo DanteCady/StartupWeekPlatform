@@ -162,7 +162,7 @@ const HomePage = () => {
 			<RegistrationModal
 				open={open}
 				onClose={handleClose}
-				registrantId={registrantId}
+				// registrantId={registrantId}
 			/>
 		</>
 	);
