@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
 	Route,
 	Navigate,
+	useNavigate,
 } from 'react-router-dom';
 
 // Views
@@ -19,57 +20,58 @@ import ManageRegistrantsPage from './views/administration/manageRegistrants';
 import Layout from './components/global/layout';
 
 function App() {
-	const isAuthenticated =
-		localStorage.getItem('event_authentication_status') === 'authenticated'; // Check if user is authenticated
+	// Store authentication status in state
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const navigate = useNavigate();
+
+	// Check localStorage on component mount
+	useEffect(() => {
+		const authStatus = localStorage.getItem('event_authentication_status');
+		if (authStatus === 'authenticated') {
+			setIsAuthenticated(true);
+			// Redirect the user to /profile if authenticated
+			navigate('/profile', { replace: true });
+		} else {
+			setIsAuthenticated(false);
+		}
+	}, [navigate]); // useEffect will run only when the component mounts or navigate changes
 
 	return (
-		<Router>
-			<Routes>
-				{/* Public Routes */}
-				<Route
-					path="/"
-					element={
+		<Routes>
+			{/* Public Routes */}
+			<Route
+				path="/"
+				element={
+					<Layout>
+						<Home />
+					</Layout>
+				}
+			/>
+			
+			{/* Protected Route for Profile */}
+			<Route
+				path="/profile"
+				element={
+					isAuthenticated ? (
 						<Layout>
-							<Home />
+							<Profile />
 						</Layout>
-					}
-				/>
-				{/* <Route
-					path="/events"
-					element={
-						<Layout>
-							<Dashboard />
-						</Layout>
-					}
-				/> */}
-				{/* <Route
-					path="/register/:eventId/check-in"
-					element={
-						<Layout>
-							<CheckInPage />
-						</Layout>
-					}
-				/> */}
+					) : (
+						<Navigate to="/" replace /> // Redirect to home if not authenticated
+					)
+				}
+			/>
 
-				{/* Protected Route for Profile */}
-				<Route
-					path="/profile"
-					element={
-						isAuthenticated ? (
-							<Layout>
-								<Profile />
-							</Layout>
-						) : (
-							<Navigate to="/profile" replace /> // Redirect to home if not authenticated
-						)
-					}
-				/>
-
-				{/* Catch-all Route: Redirect to Home for unknown paths */}
-				<Route path="*" element={<Navigate to="/" replace />} />
-			</Routes>
-		</Router>
+			{/* Catch-all Route: Redirect to Home for unknown paths */}
+			<Route path="*" element={<Navigate to="/" replace />} />
+		</Routes>
 	);
 }
 
-export default App;
+const WrappedApp = () => (
+	<Router>
+		<App />
+	</Router>
+);
+
+export default WrappedApp;
