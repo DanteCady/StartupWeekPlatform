@@ -1,16 +1,77 @@
-import React from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Grid, Button, Avatar } from '@mui/material';
 import Sidebar from '../../components/global/leftSideBar';
 import Bookmarks from '../../components/profile/bookmarksComponent';
 import EventRegistrations from '../../components/profile/registrations';
 import EventCheckIns from '../../components/profile/checkIns';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { sidebarMenuItems } from '../../constants';
-import EventsComponent from '../../components/dashboard/eventsComponent';	
+import EventsComponent from '../../components/dashboard/eventsComponent';
+import QrReader from 'react-qr-scanner';
+import useCheckIn from '../../hooks/checkIn';
+import { QrCodeScannerIcon } from '../../assets/icons';
 
 const ProfilePage = () => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+	const [qrScannerOpen, setQrScannerOpen] = useState(false);
+	const [registrantId, setRegistrantId] = useState(null); // Registrant ID
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	const {
+		checkIn,
+		loading: checkInLoading,
+		error: checkInError,
+	} = useCheckIn(); // Use check-in hook
+
+	useEffect(() => {
+		const authStatus = localStorage.getItem('event_authentication_status');
+		const storedRegistrantId = localStorage.getItem('event_registrant_id');
+		if (authStatus === 'authenticated' && storedRegistrantId) {
+			setIsAuthenticated(true);
+			setRegistrantId(storedRegistrantId);
+		}
+	}, []);
+
+	// Function to handle QR code scanning error
+	const handleError = (err) => {
+		console.error('Error scanning QR code:', err);
+		setQrScannerOpen(false);
+	};
+
+	const toggleQrScanner = () => {
+		setQrScannerOpen(!qrScannerOpen);
+	};
+
+	// Function to handle QR code scanning success
+	const handleScanSuccess = async (data) => {
+		if (data) {
+			// Close the QR scanner
+			setQrScannerOpen(false);
+
+			// Use the scanned data directly as the eventId
+			const eventId = data.text;
+
+			if (eventId && registrantId) {
+				// Trigger check-in using the extracted eventId and registrantId
+				const checkInResponse = await checkIn(eventId, registrantId);
+
+				// If the response contains the success message, handle accordingly
+				if (checkInResponse?.message === 'Check-in successful') {
+					alert('Check-in successful');
+				} else if (
+					checkInResponse?.message ===
+					'User has already checked in for this event'
+				) {
+					alert('User has already checked in for this event');
+				} else {
+					alert('Check-in failed. Please try again.');
+				}
+			} else {
+				alert('Missing eventId or registrantId');
+			}
+		}
+	};
 
 	return (
 		<Box
@@ -20,7 +81,7 @@ const ProfilePage = () => {
 				overflowX: 'hidden',
 				width: '100%',
 				display: 'flex',
-				justifyContent: 'center', 
+				justifyContent: 'center',
 			}}
 		>
 			<Box
@@ -42,8 +103,15 @@ const ProfilePage = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Typography variant="h4" sx={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold', textAlign: 'center' }}>
-						Profile
+					<Typography
+						variant="h4"
+						sx={{
+							fontSize: isMobile ? '1.5rem' : '2rem',
+							fontWeight: 'bold',
+							textAlign: 'center',
+						}}
+					>
+						QR Code Check-In
 					</Typography>
 					<Typography
 						variant="body1"
@@ -53,20 +121,70 @@ const ProfilePage = () => {
 							fontSize: isMobile ? '.875rem' : '1.25rem',
 							textAlign: 'center',
 							padding: isMobile ? '0 16px' : '0',
-							maxWidth: '100%', 
+							maxWidth: '100%',
 						}}
 					>
 						Discover your bookmarked events and never miss out on the
-						opportunities that matter most to you. Stay connected with the latest
-						insights, workshops, and networking sessions, all curated for your
-						growth and success. Revisit these events and continue your journey
-						towards innovation and collaboration.
+						opportunities that matter most to you. Stay connected with the
+						latest insights, workshops, and networking sessions, all curated for
+						your growth and success. Revisit these events and continue your
+						journey towards innovation and collaboration.
 					</Typography>
+					<Box>
+						<Button
+						onClick={toggleQrScanner}
+						>
+							<QrCodeScannerIcon
+								sx={{
+									height: '100px',
+									width: '100px',
+								}}
+							/>
+						</Button>
+					</Box>
+					{/* QR Scanner */}
+					{qrScannerOpen && (
+						<Box
+							sx={{
+								position: 'fixed',
+								top: 0,
+								left: 0,
+								width: '100%',
+								height: '100%',
+								backgroundColor: 'rgba(0, 0, 0, 0.7)',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								zIndex: 2000,
+							}}
+						>
+							<QrReader
+								delay={300}
+								onError={handleError}
+								onScan={handleScanSuccess}
+								style={{ width: '100%' }}
+								constraints={{
+									video: { facingMode: 'environment' }, // Request video from the rear camera
+								}}
+							/>
+							<Button
+								variant="contained"
+								color="error"
+								onClick={toggleQrScanner}
+								sx={{ position: 'absolute', top: '20px', right: '20px' }}
+							>
+								Close
+							</Button>
+						</Box>
+					)}
 					<Sidebar menuItems={sidebarMenuItems} />
 				</Box>
 
 				{/* Grid container for content layout */}
-				<Grid container sx={{ width: '100%', margin: 0, justifyContent: 'center' }}>
+				<Grid
+					container
+					sx={{ width: '100%', margin: 0, justifyContent: 'center' }}
+				>
 					{/* EventRegistrations area */}
 					<Grid item xs={12}>
 						<Box
