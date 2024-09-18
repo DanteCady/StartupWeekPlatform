@@ -74,6 +74,7 @@ const ProfilePage = () => {
 	};
 
 	return (
+		<>
 		<Box
 			sx={{
 				paddingTop: '64px',
@@ -211,6 +212,10 @@ const ProfilePage = () => {
 				</Grid>
 			</Box>
 		</Box>
+
+
+		{checkInError && <Typography sx={{ color: 'red' }}>Error: {checkInError}</Typography>}
+	</>
 	);
 };
 
