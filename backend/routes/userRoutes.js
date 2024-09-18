@@ -150,9 +150,9 @@ async function getCheckInsForRegistrant(req, res) {
     try {
         const query = `
             SELECT 
-                events.eventId, events.title, events.date, events.startTime, events.endTime
-            FROM events
-            JOIN events_checkins ON events.eventId = events_checkins.eventId
+                events2.eventId, events2.eventTitle, events2.date, events2.startTime, events2.endTime
+            FROM events2
+            JOIN events_checkins ON events2.eventId = events_checkins.eventId
             WHERE events_checkins.registrantId = ?
         `;
 

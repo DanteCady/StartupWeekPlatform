@@ -64,8 +64,8 @@ const CheckInsTable = ({ registrantId }) => {
           {checkIns.map((checkIn) => (
             <TableRow key={checkIn.eventId}>
               {/* <TableCell>{checkIn.eventId}</TableCell> */}
-              <TableCell>{checkIn.title}</TableCell>
-              <TableCell>{moment(checkIn.date).format('MM/DD/YYYY')}</TableCell>
+              <TableCell>{checkIn.eventTitle}</TableCell>
+              <TableCell>{checkIn.date}</TableCell>
               <TableCell>{moment(checkIn.startTime, 'HH:mm:ss').format('hh:mm A')}</TableCell>
               <TableCell>{moment(checkIn.endTime, 'HH:mm:ss').format('hh:mm A')}</TableCell>
             </TableRow>

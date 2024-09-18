@@ -60,7 +60,7 @@ function App() {
 								<Profile />
 							</Layout>
 						) : (
-							<Navigate to="/" replace /> // Redirect to home if not authenticated
+							<Navigate to="/profile" replace /> // Redirect to home if not authenticated
 						)
 					}
 				/>

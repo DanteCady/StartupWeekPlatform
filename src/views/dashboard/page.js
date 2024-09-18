@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Sidebar from '../../components/global/leftSideBar';
-import Events from '../../components/dashboard/eventsComponent';
+// import Events from '../../components/dashboard/eventsComponent';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { sidebarMenuItems } from '../../constants';
 
@@ -38,7 +38,7 @@ const DashboardPage = () => {
 			</Box>
 			<Sidebar menuItems={sidebarMenuItems} />
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-				<Events />
+				{/* <Events /> */}
 			</Box>
 		</Box>
 	);
