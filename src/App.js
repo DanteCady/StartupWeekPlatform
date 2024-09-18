@@ -51,36 +51,6 @@ function App() {
 					}
 				/> */}
 
-				{/* Protected Route for Admin */}
-				<Route
-					path="/admin"
-					element={
-						isAuthenticated ? (
-							<Layout>
-								<AdministrationPage />
-							</Layout>
-						) : (
-							<Navigate to="/" replace /> // Redirect to home if not authenticated
-						)
-					}
-				/>
-				<Route
-					path="/admin/create-event"
-					element={
-						<Layout>
-							<CreateEventPage /> {/* Component for creating an event */}
-						</Layout>
-					}
-				/>
-				<Route
-					path="/admin/manage-registrants"
-					element={
-						<Layout>
-							<ManageRegistrantsPage /> {/* Component for managing registrants */}
-						</Layout>
-					}
-				/>
-
 				{/* Protected Route for Profile */}
 				<Route
 					path="/profile"

@@ -31,7 +31,7 @@ const Footer = () => {
 					mb: 4,
 				}}
 			>
-				<Link
+				{/* <Link
 					href="/admin"
 					sx={{
 						color: 'inherit',
@@ -90,17 +90,17 @@ const Footer = () => {
 						<HomeIcon />
 					</IconButton>
 					<Typography variant="body2">Home</Typography>
-				</Link>
+				</Link> */}
 			</Box>
 
 			{/* Divider */}
-			<Divider
+			{/* <Divider
 				sx={{
 					backgroundColor: 'rgba(255, 255, 255, 0.3)',
 					width: '80%',
 					margin: '0 auto 20px',
 				}}
-			/>
+			/> */}
 
 			{/* Second Section: Credits */}
 			<Box
@@ -110,6 +110,7 @@ const Footer = () => {
 					alignItems: 'center',
 					textAlign: 'center',
 					px: isMobile ? 2 : 0, 
+					mb: 10,
 				}}
 			>
 				<Typography sx={{ color: 'white', mb: 1, fontSize: isMobile ? '12px' : '14px' }}>
