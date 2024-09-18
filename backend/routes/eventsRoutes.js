@@ -26,7 +26,7 @@ module.exports = (databasePool) => {
     async function getAllEvents(req, res) {
         try {
             // Update the query to sort by date and time in ascending order
-            const query = 'SELECT * FROM events ORDER BY date ASC, startTime ASC';
+            const query = 'SELECT * FROM events2 ORDER BY sqlDate ASC, sqlStartTime ASC';
             const [events] = await databasePool.query(query); // Execute the query
             res.status(200).json(events); // Send the events data back to the client
         } catch (error) {

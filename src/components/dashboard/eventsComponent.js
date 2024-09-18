@@ -287,7 +287,7 @@ const Events = () => {
 							>
 								{/* Title and description section */}
 								<Box>
-									<Typography variant="h6">{event.title}</Typography>
+									<Typography variant="h6">{event.eventTitle}</Typography>
 									<hr />
 									<Typography
 										variant="body2"
@@ -311,7 +311,7 @@ const Events = () => {
 											<CalendarMonthIcon
 												sx={{ fontSize: 16, marginRight: 1, color: 'black' }}
 											/>
-											{formattedDate} at {formattedTime} - {formattedEndTime}
+											{event.date} at {event.startTime} - {event.endTime}
 										</Typography>
 									</Box>
 								</Box>

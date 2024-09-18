@@ -108,7 +108,7 @@ const Sidebar = ({ menuItems = [] }) => {
           sx={{
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              width: 240,
+              width: 150,
               position: 'fixed',
               top: headerHeight, 
               height: availableHeight, 
