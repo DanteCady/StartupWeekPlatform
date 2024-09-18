@@ -11,7 +11,6 @@ import {
 // Views
 import Home from './views/home/page';
 import Profile from './views/profile/page';
-import CheckInPage from './views/checkIn/page';
 import Layout from './components/global/layout';
 import useCheckIn from './hooks/checkIn'; // Import the useCheckIn hook
 
@@ -19,7 +18,7 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
     const location = useLocation(); // Get current location to extract eventId
-    const { checkIn, loading, error } = useCheckIn(); // Destructure the check-in hook
+    const { checkIn } = useCheckIn(); // Destructure the check-in hook
 
     // Check localStorage on component mount
     useEffect(() => {
@@ -28,24 +27,28 @@ function App() {
         const eventId = queryParams.get('event'); // Extract eventId from the URL
         const registrantId = localStorage.getItem('event_registrant_id');  // Get registrantId from localStorage
 
-		// If the user is authenticated and eventId is present, check them in
-        if (authStatus === 'authenticated' && eventId && registrantId) {
+        // Ensures that state update or navigation happens only when necessary
+        if (authStatus === 'authenticated') {
             setIsAuthenticated(true);
-            
-            // Automatically check in if the user is authenticated and eventId is present
-            checkIn(eventId, registrantId).then((response) => {
-                if (response?.message === 'User has already checked in for this event') {
-                    alert('You have already checked in!');
-                } else if (response) {
-                    alert('Check-in successful!');
-                    navigate('/profile'); // Redirect to profile or desired page
-                }
-            });
-        } else {
-            setIsAuthenticated(false);
-        }
-    }, [navigate, location.search, checkIn]); // Re-run if navigate, location or checkIn changes
 
+            // Only check-in if eventId exists in the URL (QR code scan case)
+            if (eventId && registrantId) {
+                checkIn(eventId, registrantId).then((response) => {
+                    if (response?.message === 'User has already checked in for this event') {
+                        alert('You have already checked in!');
+                    } else if (response) {
+                        alert('Check-in successful!');
+                    }
+                    // Always navigate to profile after check-in
+                    navigate('/profile', { replace: true });
+                });
+            } else {
+                // If no eventId, just navigate to profile without triggering check-in
+                navigate('/profile', { replace: true });
+            }
+        }
+    }, [location.search, checkIn, navigate]); // Dependency array now only includes location.search to avoid infinite loop
+		// Infinite loop is avoided by removing isAuthenticated from the dependency array 
     return (
         <Routes>
             <Route
@@ -56,7 +59,14 @@ function App() {
                     </Layout>
                 }
             />
-            
+               <Route
+                path="/home"
+                element={
+                    <Layout>
+                        <Home />
+                    </Layout>
+                }
+            />
             <Route
                 path="/profile"
                 element={
