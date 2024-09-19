@@ -11,9 +11,9 @@ import {
 // Views
 import Home from './views/home/page';
 import Profile from './views/profile/page';
+import AuthOptions from './views/authOptions/page'; 
 import Layout from './components/global/layout';
-import useCheckIn from './hooks/checkIn'; 
-import AuthOptions from './views/authOptions/page';
+import useCheckIn from './hooks/checkIn';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,9 +57,8 @@ function App() {
                 console.error("Check-in error: ", error); // Log any check-in errors
             });
         } 
-        // Case 2: User is not authenticated and scans QR code or visits the root path
+        // Case 2: User is not authenticated and scans QR code
         else if (!authStatus && eventId) {
-            // Prevent navigation loops by checking if user is already on auth-options
             if (location.pathname !== '/auth-options') {
                 navigate('/auth-options'); // Redirect to Login/Register prompt screen
             }
@@ -68,7 +67,7 @@ function App() {
         else if (!authStatus && !eventId && location.pathname === '/') {
             navigate('/auth-options'); // Redirect to Login/Register if no eventId
         }
-        // Case 4: Normal navigation without event ID
+        // Case 4: User is authenticated but without a QR code (normal navigation)
         else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
             setIsAuthenticated(true);
             navigate('/profile', { replace: true });
@@ -80,17 +79,13 @@ function App() {
             <Route
                 path="/"
                 element={
-                    <Layout>
-                        <Home />
-                    </Layout>
-                }
-            />
-            <Route
-                path="/register"
-                element={
-                    <Layout>
-                        <Home />
-                    </Layout>
+                    isAuthenticated ? (
+                        <Layout>
+                            <Home />
+                        </Layout>
+                    ) : (
+                        <Navigate to="/auth-options" replace />
+                    )
                 }
             />
             <Route
@@ -101,7 +96,7 @@ function App() {
                             <Profile />
                         </Layout>
                     ) : (
-                        <Navigate to="/" replace /> // Redirect to home if not authenticated
+                        <Navigate to="/auth-options" replace /> // Redirect to auth-options if not authenticated
                     )
                 }
             />
