@@ -56,21 +56,25 @@ const Header = () => {
     // Function to handle QR code scanning success
     const handleScanSuccess = async (data) => {
         if (data) {
-            // Close the QR scanner
             setQrScannerOpen(false);
-
-            // Use the scanned data directly as the eventId
-            const eventId = data.text; 
-
+    
+            const eventId = data.text; // Get scanned eventId
+            const checkedInEvents = JSON.parse(localStorage.getItem('checkedInEvents')) || [];
+    
+            if (checkedInEvents.includes(eventId)) {
+                alert('You have already checked in for this event.');
+                return;
+            }
+    
             if (eventId && registrantId) {
-                // Trigger check-in using the extracted eventId and registrantId
                 const checkInResponse = await checkIn(eventId, registrantId);
-
-                // If the response contains the success message, handle accordingly
+    
                 if (checkInResponse?.message === 'Check-in successful') {
                     alert('Check-in successful');
+                    checkedInEvents.push(eventId); // Store the checked-in eventId
+                    localStorage.setItem('checkedInEvents', JSON.stringify(checkedInEvents));
                 } else if (checkInResponse?.message === 'User has already checked in for this event') {
-                    alert('User has already checked in for this event');
+                    alert('User has already checked in for this event.');
                 } else {
                     alert('Check-in failed. Please try again.');
                 }
@@ -79,6 +83,7 @@ const Header = () => {
             }
         }
     };
+    
 
     // Function to handle QR code scanning error
     const handleError = (err) => {
