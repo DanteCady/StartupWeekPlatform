@@ -124,14 +124,14 @@ const Header = () => {
                     {isAuthenticated ? (
                         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                             {/* Only show QR scanner on mobile */}
-                            {isMobile && (
+                            {/* {isMobile && (
                                 <IconButton
                                     onClick={toggleQrScanner}
                                     sx={{ color: 'white', mb: 1 }} 
                                 >
                                     <QrCodeScannerIcon />
                                 </IconButton>
-                            )}
+                            )} */}
 
                             <Button
                                 onClick={handleSignOut}
