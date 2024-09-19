@@ -52,16 +52,20 @@ function App() {
                 navigate('/profile', { replace: true });
             });
         } 
-        // Case 2: User is not authenticated and scans QR code
-        else if (eventId && !authStatus) {
+        // Case 2: User is not authenticated and scans QR code or visits the root path
+        else if (!authStatus && eventId) {
             navigate('/auth-options'); // Redirect to Login/Register prompt screen
-        } 
-        // Case 3: Normal navigation without event ID
+        }
+        // Case 3: User is not authenticated and visits the root path without an event
+        else if (!authStatus && !eventId && location.pathname === '/') {
+            navigate('/auth-options'); // Redirect to Login/Register if no eventId
+        }
+        // Case 4: Normal navigation without event ID
         else if (authStatus === 'authenticated' && !eventId) {
             setIsAuthenticated(true);
             navigate('/profile', { replace: true });
         }
-    }, [location.search, checkIn, navigate, checkInComplete]); // Add checkInComplete to dependencies
+    }, [location.search, checkIn, navigate, checkInComplete, location.pathname]); // Add location.pathname and checkInComplete to dependencies
 
     return (
         <Routes>

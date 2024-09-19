@@ -44,7 +44,7 @@ const AuthOptions = () => {
                     align="center" 
                     gutterBottom
                 >
-                    Please Login or Register
+                    Please Sign In or Register
                 </Typography>
                 <Grid container spacing={isMobile ? 1 : 2} justifyContent="center">
                     <Grid item xs={12} sm={6}>
@@ -58,7 +58,7 @@ const AuthOptions = () => {
                                 backgroundColor:  "#252b4e",
                             }}
                         >
-                            Login
+                            Sign In
                         </Button>
                     </Grid>
                     <Grid item xs={12} sm={6}>
