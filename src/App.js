@@ -45,15 +45,15 @@ function App() {
     useEffect(() => {
         const authStatus = safeLocalStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
         const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
-        const eventId = queryParams.get('event');
+        const eventId = queryParams.get('event'); // Extract eventId from the URL
         const registrantId = safeLocalStorage.getItem('event_registrant_id'); // Get registrantId from localStorage
     
         // Function to store eventId in an array in localStorage (for multiple eventIds)
         const storeEventId = (newEventId) => {
-            let eventId = JSON.parse(safeLocalStorage.getItem('eventId')) || [];
-            if (!eventId.includes(newEventId)) {
-                eventId.push(newEventId);
-                safeLocalStorage.setItem('eventId', JSON.stringify(eventId)); // Store updated eventIds array
+            let eventIds = JSON.parse(safeLocalStorage.getItem('eventIds')) || []; // Access array of eventIds
+            if (!eventIds.includes(newEventId)) {
+                eventIds.push(newEventId);
+                safeLocalStorage.setItem('eventIds', JSON.stringify(eventIds)); // Store updated eventIds array
             }
         };
     
@@ -106,7 +106,6 @@ function App() {
             navigate('/auth-options'); // Redirect to Login/Register if no eventId
         }
     }, [location.search, checkInComplete, checkIn]);
-    
     
     return (
         <Routes>
