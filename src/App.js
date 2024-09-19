@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     BrowserRouter as Router,
     Routes,
@@ -13,16 +13,22 @@ import Home from './views/home/page';
 import Profile from './views/profile/page';
 import AuthOptions from './views/authOptions/page'; 
 import Layout from './components/global/layout';
-import useCheckIn from './hooks/checkIn';
+import useCheckIn from './hooks/checkIn'; 
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [checkInComplete, setCheckInComplete] = useState(false); // Track if check-in has completed
     const navigate = useNavigate();
     const location = useLocation(); // Get current location to extract eventId
     const { checkIn } = useCheckIn(); // Destructure the check-in hook
+    const firstRender = useRef(true); // Use ref to prevent multiple useEffect runs
 
-    // Check localStorage on component mount
     useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false; // Ensure this useEffect only runs once initially
+            return;
+        }
+
         const authStatus = localStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
         const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
         const eventId = queryParams.get('event'); // Extract eventId from the URL
@@ -34,7 +40,7 @@ function App() {
         }
 
         // Case 1: User is authenticated and scans QR code
-        if (authStatus === 'authenticated' && eventId && registrantId) {
+        if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
             setIsAuthenticated(true);
             checkIn(eventId, registrantId).then((response) => {
                 if (response?.message === 'User has already checked in for this event') {
@@ -42,6 +48,7 @@ function App() {
                 } else if (response) {
                     alert('Check-in successful!');
                 }
+                setCheckInComplete(true); // Mark check-in as completed
                 navigate('/profile', { replace: true });
             });
         } 
@@ -54,7 +61,7 @@ function App() {
             setIsAuthenticated(true);
             navigate('/profile', { replace: true });
         }
-    }, [location.search, checkIn, navigate]); // Dependency array now only includes location.search to avoid infinite loop
+    }, [location.search, checkIn, navigate, checkInComplete]); // Add checkInComplete to dependencies
 
     return (
         <Routes>
