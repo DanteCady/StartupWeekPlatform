@@ -45,7 +45,7 @@ function App() {
     useEffect(() => {
         const authStatus = safeLocalStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
         const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
-        const eventId = queryParams.get('event'); // Extract eventId from the URL
+        const eventId = queryParams.get('event') || safeLocalStorage.getItem('eventId'); // Extract eventId from URL or localStorage
         const registrantId = safeLocalStorage.getItem('event_registrant_id'); // Get registrantId from localStorage
 
         // Store eventId in localStorage if present in URL
@@ -79,25 +79,45 @@ function App() {
                 });
         }
 
-        //  Case 2: User is not authenticated and scans QR code 
+        // Case 2: User is authenticated after logging in and eventId exists in localStorage
+        else if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
+            setIsAuthenticated(true);
+            
+            // Trigger the check-in once user is authenticated after login
+            checkIn(eventId, registrantId)
+                .then((response) => {
+                    if (response?.message === 'User has already checked in for this event') {
+                        alert('You have already checked in!');
+                    } else if (response) {
+                        alert('Check-in successful!');
+                    }
+                    setCheckInComplete(true); // Mark check-in as completed
+                    navigate('/profile', { replace: true });
+                })
+                .catch((error) => {
+                    console.error("Check-in error:", error);
+                });
+        }
+
+        // Case 3: User is not authenticated and scans QR code 
         else if (!authStatus && eventId) {
             if (location.pathname !== '/auth-options') {
                 navigate('/auth-options'); // Redirect to Login/Register prompt screen
             }
         }
 
-        //  Case 3: User is not authenticated and visits the root path (/) without an event 
+        // Case 4: User is not authenticated and visits the root path (/) without an event 
         else if (!authStatus && !eventId && location.pathname === '/') {
             navigate('/auth-options'); // Redirect to Login/Register if no eventId
         }
 
-        //  Case 4: User is authenticated and navigating normally (without QR code)
+        // Case 5: User is authenticated and navigating normally (without QR code)
         else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
             setIsAuthenticated(true);
             setCheckInComplete(true); // Ensure this only happens once
             navigate('/profile', { replace: true });
         }
-    }, [location.search, checkInComplete]);
+    }, [location.search, checkInComplete, checkIn]);
 
     return (
         <Routes>
