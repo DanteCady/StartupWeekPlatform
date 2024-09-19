@@ -11,20 +11,22 @@ const useCheckIn = () => {
         setError(null);
 
         try {
-            console.log(`Checking in for eventId: ${eventId} with registrantId: ${registrantId}`);
+            console.log(`Making API call to check in for eventId: ${eventId} with registrantId: ${registrantId}`);
             const response = await axios.post(`${eventsEndpoint}/check-in`, {
                 eventId,
                 registrantId
             });
-            console.log("Check-in response:", response.data);
-            return response.data;
+
+            console.log("Check-in response data:", response.data);
+            return response.data; // Make sure we return data
         } catch (err) {
-            const errorMessage = err.response?.data?.error;
-            console.error("Check-in failed:", errorMessage || err.message);
-            setError(errorMessage || 'An unknown error occurred');
-            return null;
+            const errorMessage = err.response?.data?.error || 'Network Error or Invalid Response';
+            console.error("Check-in failed with error:", errorMessage);
+            setError(errorMessage);
+            return null; // Return null if check-in fails
         } finally {
-            setLoading(false);
+            console.log("Check-in process complete, setting loading to false");
+            setLoading(false); // Ensure loading is stopped
         }
     };
 

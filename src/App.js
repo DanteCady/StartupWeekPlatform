@@ -27,7 +27,6 @@ const safeLocalStorage = {
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [checkInComplete, setCheckInComplete] = useState(false); // Track if check-in has completed
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -39,7 +38,7 @@ function App() {
         const queryParams = new URLSearchParams(location.search);
         const eventId = queryParams.get('event');
         const registrantId = safeLocalStorage.getItem('event_registrant_id');
-    
+
         const storeEventId = (newEventId) => {
             let eventIds = JSON.parse(safeLocalStorage.getItem('eventIds')) || [];
             if (!eventIds.includes(newEventId)) {
@@ -47,24 +46,23 @@ function App() {
                 safeLocalStorage.setItem('eventIds', JSON.stringify(eventIds));
             }
         };
-    
+
         // Store eventId if present
         if (eventId) {
             console.log(`Storing eventId: ${eventId}`);
             storeEventId(eventId);
         }
-    
+
         if (firstRender.current) {
             firstRender.current = false;
             return;
         }
-    
+
         // Case 1: User is authenticated and eventId is present (check-in process)
         if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
-            console.log("Starting check-in process...");
+            console.log("Starting check-in process for event:", eventId);
             setIsAuthenticated(true);
-            setLoading(true); // Ensure loading state is true during check-in
-    
+
             checkIn(eventId, registrantId)
                 .then((response) => {
                     if (response?.message === 'User has already checked in for this event') {
@@ -81,39 +79,30 @@ function App() {
                 .catch((error) => {
                     console.error("Check-in error:", error);
                     setError("Check-in failed.");
-                })
-                .finally(() => {
-                    console.log("Check-in process finished.");
-                    setLoading(false); // Ensure loading is turned off
                 });
         }
-    
+
         // Case 2: User is authenticated but no eventId present (normal login)
         else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
             console.log("Normal login detected. Redirecting to profile.");
             setIsAuthenticated(true);
             setCheckInComplete(true);
-            setLoading(false);
             navigate('/profile'); // Redirect to profile for normal login
         }
-    
+
         // Case 3: User is not authenticated and eventId is present (redirect to login)
         else if (!authStatus && eventId) {
             console.log("User not authenticated, redirecting to auth-options.");
             navigate('/auth-options');
         }
-    
+
         // Case 4: User is not authenticated and no eventId is present (redirect to login)
         else if (!authStatus && !eventId) {
             console.log("No authentication and no eventId, redirecting to auth-options.");
             navigate('/auth-options');
         }
-    
-    }, [location.search, checkInComplete, checkIn]);
-    
-    if (loading) {
-        return <div>Loading...</div>; // Prevent rendering until all checks complete
-    }
+
+    }, [location.search, checkInComplete, checkIn, navigate]);
 
     if (error) {
         return <div>Error: {error}</div>; // Display error if any during check-in
