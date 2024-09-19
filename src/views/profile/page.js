@@ -17,7 +17,7 @@ const ProfilePage = () => {
 	const [qrScannerOpen, setQrScannerOpen] = useState(false);
 	const [registrantId, setRegistrantId] = useState(null); // Registrant ID
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+	const [loading, setLoading] = useState(true); 
 	const {
 		checkIn,
 		loading: checkInLoading,
@@ -31,8 +31,12 @@ const ProfilePage = () => {
 			setIsAuthenticated(true);
 			setRegistrantId(storedRegistrantId);
 		}
+		setLoading(false); // Set loading to false after checking
 	}, []);
-
+	
+	if (loading) {
+		return <div>Loading...</div>; // Display a loading indicator
+	}
 	// Function to handle QR code scanning error
 	const handleError = (err) => {
 		console.error('Error scanning QR code:', err);

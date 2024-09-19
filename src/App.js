@@ -94,9 +94,10 @@ function App() {
         //  Case 4: User is authenticated and navigating normally (without QR code)
         else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
             setIsAuthenticated(true);
+            setCheckInComplete(true); // Ensure this only happens once
             navigate('/profile', { replace: true });
         }
-    }, [location.search, checkIn, navigate, checkInComplete, location.pathname]); // Add location.pathname and checkInComplete to dependencies
+    }, [location.search, checkInComplete]);
 
     return (
         <Routes>
@@ -112,7 +113,7 @@ function App() {
                     )
                 }
             />
-		   <Route
+           <Route
                 path="/register"
                 element={
                         <Layout>
