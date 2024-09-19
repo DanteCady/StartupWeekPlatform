@@ -26,7 +26,7 @@ const safeLocalStorage = {
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [checkInComplete, setCheckInComplete] = useState(false); // Track if check-in has completed
+    const [checkInComplete, setCheckInComplete] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -39,18 +39,10 @@ function App() {
         const eventId = queryParams.get('event');
         const registrantId = safeLocalStorage.getItem('event_registrant_id');
 
-        const storeEventId = (newEventId) => {
-            let eventIds = JSON.parse(safeLocalStorage.getItem('eventIds')) || [];
-            if (!eventIds.includes(newEventId)) {
-                eventIds.push(newEventId);
-                safeLocalStorage.setItem('eventIds', JSON.stringify(eventIds));
-            }
-        };
-
-        // Store eventId if present
+        // Store the eventId in localStorage if it comes from the URL
         if (eventId) {
             console.log(`Storing eventId: ${eventId}`);
-            storeEventId(eventId);
+            safeLocalStorage.setItem('eventId', eventId);
         }
 
         if (firstRender.current) {
@@ -58,47 +50,40 @@ function App() {
             return;
         }
 
-        // Case 1: User is authenticated and eventId is present (check-in process)
-        if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
-            console.log("Starting check-in process for event:", eventId);
+        // Case 1: User is authenticated and eventId is present (check-in process after login)
+        if (authStatus === 'authenticated' && !checkInComplete) {
             setIsAuthenticated(true);
 
-            checkIn(eventId, registrantId)
-                .then((response) => {
-                    if (response?.message === 'User has already checked in for this event') {
-                        console.log("User already checked in.");
-                        alert('You have already checked in!');
-                        navigate('/profile'); // Redirect to profile even if already checked in
-                    } else if (response) {
-                        console.log("Check-in successful!");
-                        alert('Check-in successful!');
+            const storedEventId = safeLocalStorage.getItem('eventId'); // Retrieve stored eventId after login
+            if (storedEventId && registrantId) {
+                console.log("Starting check-in process for event:", storedEventId);
+
+                checkIn(storedEventId, registrantId)
+                    .then((response) => {
+                        if (response?.message === 'User has already checked in for this event') {
+                            console.log("User already checked in.");
+                            alert('You have already checked in!');
+                        } else if (response) {
+                            console.log("Check-in successful!");
+                            alert('Check-in successful!');
+                        }
+                        setCheckInComplete(true);
                         navigate('/profile'); // Redirect to profile after successful check-in
-                    }
-                    setCheckInComplete(true);
-                })
-                .catch((error) => {
-                    console.error("Check-in error:", error);
-                    setError("Check-in failed.");
-                });
+                    })
+                    .catch((error) => {
+                        console.error("Check-in error:", error);
+                        setError("Check-in failed.");
+                    });
+            } else {
+                console.log("No eventId stored, continuing normal login flow.");
+                setCheckInComplete(true);
+                navigate('/profile'); // Normal login flow without check-in
+            }
         }
 
-        // Case 2: User is authenticated but no eventId present (normal login)
-        else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
-            console.log("Normal login detected. Redirecting to profile.");
-            setIsAuthenticated(true);
-            setCheckInComplete(true);
-            navigate('/profile'); // Redirect to profile for normal login
-        }
-
-        // Case 3: User is not authenticated and eventId is present (redirect to login)
+        // Case 2: User is not authenticated and eventId is present (redirect to login)
         else if (!authStatus && eventId) {
             console.log("User not authenticated, redirecting to auth-options.");
-            navigate('/auth-options');
-        }
-
-        // Case 4: User is not authenticated and no eventId is present (redirect to login)
-        else if (!authStatus && !eventId) {
-            console.log("No authentication and no eventId, redirecting to auth-options.");
             navigate('/auth-options');
         }
 
