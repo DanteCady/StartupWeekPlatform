@@ -11,16 +11,16 @@ const useCheckIn = () => {
         setError(null);
 
         try {
+            console.log(`Checking in for eventId: ${eventId} with registrantId: ${registrantId}`);
             const response = await axios.post(`${eventsEndpoint}/check-in`, {
                 eventId,
                 registrantId
             });
+            console.log("Check-in response:", response.data);
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error;
-            if (errorMessage === 'User has already checked in for this event') {
-                return { message: errorMessage };
-            }
+            console.error("Check-in failed:", errorMessage || err.message);
             setError(errorMessage || 'An unknown error occurred');
             return null;
         } finally {
