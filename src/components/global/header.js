@@ -45,24 +45,34 @@ const Header = () => {
 
     const handleSignOut = () => {
         localStorage.removeItem('event_authentication_status');
+        localStorage.removeItem('event_registrant_id');
+        localStorage.removeItem('eventId'); // Clear eventId to prevent auto-check-in
         setIsAuthenticated(false);
-        window.location.reload();
+        setRegistrantId(null); // Reset registrantId state
+        window.location.reload(); // Reload the page to reset state and force a fresh login
     };
+    
 
     // Function to handle QR code scanning success
     const handleScanSuccess = async (data) => {
         if (data) {
             // Close the QR scanner
             setQrScannerOpen(false);
-
+    
             // Use the scanned data directly as the eventId
             const eventId = data.text; 
-
+    
             if (eventId && registrantId) {
+                // Store the new eventId in localStorage for tracking multiple events
+                let eventId = JSON.parse(localStorage.getItem('eventId')) || [];
+                if (!eventId.includes(eventId)) {
+                    eventId.push(eventId);
+                    localStorage.setItem('eventIds', JSON.stringify(eventId)); // Store updated eventIds array
+                }
+    
                 // Trigger check-in using the extracted eventId and registrantId
                 const checkInResponse = await checkIn(eventId, registrantId);
-
-                // If the response contains the success message, handle accordingly
+    
                 if (checkInResponse?.message === 'Check-in successful') {
                     alert('Check-in successful');
                 } else if (checkInResponse?.message === 'User has already checked in for this event') {
@@ -75,6 +85,7 @@ const Header = () => {
             }
         }
     };
+    
 
     // Function to handle QR code scanning error
     const handleError = (err) => {

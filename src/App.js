@@ -45,24 +45,33 @@ function App() {
     useEffect(() => {
         const authStatus = safeLocalStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
         const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
-        const eventId = queryParams.get('event') || safeLocalStorage.getItem('eventId'); // Extract eventId from URL or localStorage
+        const eventId = queryParams.get('event');
         const registrantId = safeLocalStorage.getItem('event_registrant_id'); // Get registrantId from localStorage
-
+    
+        // Function to store eventId in an array in localStorage (for multiple eventIds)
+        const storeEventId = (newEventId) => {
+            let eventId = JSON.parse(safeLocalStorage.getItem('eventId')) || [];
+            if (!eventId.includes(newEventId)) {
+                eventId.push(newEventId);
+                safeLocalStorage.setItem('eventId', JSON.stringify(eventId)); // Store updated eventIds array
+            }
+        };
+    
         // Store eventId in localStorage if present in URL
         if (eventId) {
-            safeLocalStorage.setItem('eventId', eventId); // Store eventId for future use (if user needs to log in)
+            storeEventId(eventId); // Store the eventId in localStorage array
         }
-
+    
         // Handle first render issue
         if (firstRender.current) {
             firstRender.current = false;
             return;
         }
-
-        //  Case 1: User is authenticated and scans QR code
+    
+        // Case: User is authenticated and scans QR code
         if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
             setIsAuthenticated(true);
-
+    
             // Trigger the check-in only once to avoid repeated calls
             checkIn(eventId, registrantId)
                 .then((response) => {
@@ -78,47 +87,27 @@ function App() {
                     console.error("Check-in error:", error);
                 });
         }
-
-        // Case 2: User is authenticated after logging in and eventId exists in localStorage
-        else if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
+    
+        // Case: User is authenticated and no eventId (login without check-in)
+        else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
             setIsAuthenticated(true);
-            
-            // Trigger the check-in once user is authenticated after login
-            checkIn(eventId, registrantId)
-                .then((response) => {
-                    if (response?.message === 'User has already checked in for this event') {
-                        alert('You have already checked in!');
-                    } else if (response) {
-                        alert('Check-in successful!');
-                    }
-                    setCheckInComplete(true); // Mark check-in as completed
-                    navigate('/profile', { replace: true });
-                })
-                .catch((error) => {
-                    console.error("Check-in error:", error);
-                });
+            navigate('/profile', { replace: true });
         }
-
-        // Case 3: User is not authenticated and scans QR code 
+    
+        // Case: User is not authenticated and scans QR code 
         else if (!authStatus && eventId) {
             if (location.pathname !== '/auth-options') {
                 navigate('/auth-options'); // Redirect to Login/Register prompt screen
             }
         }
-
-        // Case 4: User is not authenticated and visits the root path (/) without an event 
+    
+        // Case: User is not authenticated and visits the root path (/) without an event 
         else if (!authStatus && !eventId && location.pathname === '/') {
             navigate('/auth-options'); // Redirect to Login/Register if no eventId
         }
-
-        // Case 5: User is authenticated and navigating normally (without QR code)
-        else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
-            setIsAuthenticated(true);
-            setCheckInComplete(true); // Ensure this only happens once
-            navigate('/profile', { replace: true });
-        }
     }, [location.search, checkInComplete, checkIn]);
-
+    
+    
     return (
         <Routes>
             <Route
