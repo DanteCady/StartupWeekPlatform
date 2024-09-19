@@ -19,7 +19,6 @@ const Layout = ({ children }) => {
           alignItems: 'center',
           minHeight: '100vh',
           paddingTop: '64px', 
-          paddingBottom: '110px',
           overflowX: 'hidden',
         }}
       >

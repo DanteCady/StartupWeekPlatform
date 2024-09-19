@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, Button, Avatar } from '@mui/material';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import Sidebar from '../../components/global/leftSideBar';
-import Bookmarks from '../../components/profile/bookmarksComponent';
-import EventRegistrations from '../../components/profile/registrations';
 import EventCheckIns from '../../components/profile/checkIns';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { sidebarMenuItems } from '../../constants';
-import EventsComponent from '../../components/profile/eventsComponent';
 import QrReader from 'react-qr-scanner';
 import useCheckIn from '../../hooks/checkIn';
 import { QrCodeScannerIcon } from '../../assets/icons';
@@ -17,12 +14,9 @@ const ProfilePage = () => {
 	const [qrScannerOpen, setQrScannerOpen] = useState(false);
 	const [registrantId, setRegistrantId] = useState(null); // Registrant ID
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [loading, setLoading] = useState(true); 
-	const {
-		checkIn,
-		loading: checkInLoading,
-		error: checkInError,
-	} = useCheckIn(); // Use check-in hook
+	const [loading, setLoading] = useState(true);
+	const [checkInMessage, setCheckInMessage] = useState(''); // New state for check-in message
+	const { checkIn, loading: checkInLoading, error: checkInError } = useCheckIn();
 
 	useEffect(() => {
 		const authStatus = localStorage.getItem('event_authentication_status');
@@ -33,59 +27,61 @@ const ProfilePage = () => {
 		}
 		setLoading(false); // Set loading to false after checking
 	}, []);
-	
-	if (loading) {
-		return <div>Loading...</div>; // Display a loading indicator
-	}
+
 	// Function to handle QR code scanning error
 	const handleError = (err) => {
 		console.error('Error scanning QR code:', err);
 		setQrScannerOpen(false);
+		setCheckInMessage('Error scanning QR code. Please try again.');
 	};
 
 	const toggleQrScanner = () => {
 		setQrScannerOpen(!qrScannerOpen);
+		setCheckInMessage(''); // Clear message when toggling QR scanner
 	};
 
 	// Function to handle QR code scanning success
 	const handleScanSuccess = async (data) => {
 		if (data) {
 			setQrScannerOpen(false);
-	
+			setCheckInMessage(''); // Clear previous message
+
 			const eventId = data.text; // Get scanned eventId
 			const checkedInEvents = JSON.parse(localStorage.getItem('checkedInEvents')) || [];
-	
+
 			if (checkedInEvents.includes(eventId)) {
-				alert('You have already checked in for this event.');
+				setCheckInMessage('You have already checked in for this event.');
 				return;
 			}
-	
+
 			if (eventId && registrantId) {
-				const checkInResponse = await checkIn(eventId, registrantId);
-	
-				if (checkInResponse?.message === 'Check-in successful') {
-					alert('Check-in successful');
-					checkedInEvents.push(eventId); // Store the checked-in eventId
-					localStorage.setItem('checkedInEvents', JSON.stringify(checkedInEvents));
-				} else if (checkInResponse?.message === 'User has already checked in for this event') {
-					alert('User has already checked in for this event.');
-				} else {
-					alert('Check-in failed. Please try again.');
+				try {
+					const checkInResponse = await checkIn(eventId, registrantId);
+
+					if (checkInResponse?.message === 'Check-in successful') {
+						setCheckInMessage('Check-in successful!');
+						checkedInEvents.push(eventId); // Store the checked-in eventId
+						localStorage.setItem('checkedInEvents', JSON.stringify(checkedInEvents));
+					} else if (checkInResponse?.message === 'User has already checked in for this event') {
+						setCheckInMessage('You have already checked in for this event.');
+					} else {
+						setCheckInMessage('Check-in failed. Please try again.');
+					}
+				} catch (error) {
+					setCheckInMessage(error.response?.data?.error || 'An error occurred during check-in. Please try again.');
+					console.error('Error during check-in:', error);
 				}
 			} else {
-				alert('Missing eventId or registrantId');
+				setCheckInMessage('Missing eventId or registrantId.');
 			}
 		}
 	};
-	
-	
 
 	return (
 		<>
 			<Box
 				sx={{
 					paddingTop: '64px',
-					paddingBottom: 8,
 					overflowX: 'hidden',
 					width: '100%',
 					display: 'flex',
@@ -101,7 +97,6 @@ const ProfilePage = () => {
 						maxWidth: isMobile ? '100%' : '1200px', // Limit max width on desktop
 					}}
 				>
-					{/* Full-width content area */}
 					<Box
 						sx={{
 							width: '100%',
@@ -119,7 +114,7 @@ const ProfilePage = () => {
 								textAlign: 'center',
 							}}
 						>
-							QR Code Check-In
+							Thank you for checking in
 						</Typography>
 						<Typography
 							variant="body1"
@@ -132,11 +127,10 @@ const ProfilePage = () => {
 								maxWidth: '100%',
 							}}
 						>
-							Discover your bookmarked events and never miss out on the
-							opportunities that matter most to you. Stay connected with the
-							latest insights, workshops, and networking sessions, all curated
-							for your growth and success. Revisit these events and continue
-							your journey towards innovation and collaboration.
+							The top 3 people with the most check-ins will win amazing prizes from RI Startup Week!
+						</Typography>
+						<Typography variant="body2" color="textSecondary">
+							Click the button below to check into a new event.
 						</Typography>
 						<Box>
 							<Button onClick={toggleQrScanner}>
@@ -148,6 +142,7 @@ const ProfilePage = () => {
 								/>
 							</Button>
 						</Box>
+
 						{/* QR Scanner */}
 						{qrScannerOpen && (
 							<Box
@@ -186,35 +181,10 @@ const ProfilePage = () => {
 						<Sidebar menuItems={sidebarMenuItems} />
 					</Box>
 
-					{/* Grid container for content layout */}
-					<Grid
-						container
-						sx={{ width: '100%', margin: 0, justifyContent: 'center' }}
-					>
-						{/* EventRegistrations area */}
-						<Grid item xs={12}>
-							<Box
-								sx={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									justifyContent: 'center',
-									width: '100%',
-									borderBottom: !isMobile ? 1 : 0,
-									borderColor: 'divider',
-									borderRadius: 1,
-									padding: isMobile ? 1 : 2,
-									maxWidth: '100%',
-									overflowX: 'hidden', // Prevent horizontal scrolling
-								}}
-							>
-								<EventsComponent />
-								<EventRegistrations />
-								<EventCheckIns />
-								{/* <Bookmarks /> */}
-							</Box>
-						</Grid>
-					</Grid>
+					<Typography variant="h6" sx={{ marginBottom: 2 }}>
+						All of your event check-ins are listed below.
+					</Typography>
+					<EventCheckIns />
 				</Box>
 			</Box>
 

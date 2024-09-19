@@ -29,7 +29,7 @@ const CheckInComponent = () => {
       >
         Your Check-Ins
       </Typography>
-      <Box sx={{ marginTop: isMobile ? '16px' : '32px' }}>
+      <Box sx={{ marginTop: isMobile ? 0 : '32px' }}>
         <CheckInsTable />
       </Box>
     </Box>
