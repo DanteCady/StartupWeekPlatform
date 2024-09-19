@@ -13,6 +13,7 @@ import Home from './views/home/page';
 import Profile from './views/profile/page';
 import Layout from './components/global/layout';
 import useCheckIn from './hooks/checkIn'; 
+import AuthOptions from './views/authOptions/page';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
