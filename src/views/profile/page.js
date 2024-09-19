@@ -48,34 +48,6 @@ const ProfilePage = () => {
 	};
 
 	// Function to handle QR code scanning success
-	// const handleScanSuccess = async (data) => {
-	// 	if (data) {
-	// 		// Close the QR scanner
-	// 		setQrScannerOpen(false);
-
-	// 		// Use the scanned data directly as the eventId
-	// 		const eventId = data.text;
-
-	// 		if (eventId && registrantId) {
-	// 			// Trigger check-in using the extracted eventId and registrantId
-	// 			const checkInResponse = await checkIn(eventId, registrantId);
-
-	// 			// If the response contains the success message, handle accordingly
-	// 			if (checkInResponse?.message === 'Check-in successful') {
-	// 				alert('Check-in successful');
-	// 			} else if (
-	// 				checkInResponse?.message ===
-	// 				'User has already checked in for this event'
-	// 			) {
-	// 				alert('User has already checked in for this event');
-	// 			} else {
-	// 				alert('Check-in failed. Please try again.');
-	// 			}
-	// 		} else {
-	// 			alert('Missing eventId or registrantId');
-	// 		}
-	// 	}
-	// };
 	const handleScanSuccess = async (data) => {
 		if (data) {
 			setQrScannerOpen(false);
@@ -105,6 +77,7 @@ const ProfilePage = () => {
 			}
 		}
 	};
+	
 	
 
 	return (

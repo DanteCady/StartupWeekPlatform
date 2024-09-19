@@ -42,6 +42,70 @@ function App() {
     const { checkIn } = useCheckIn(); // Destructure the check-in hook
     const firstRender = useRef(true); // Use ref to prevent multiple useEffect runs
 
+    // useEffect(() => {
+    //     const authStatus = safeLocalStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
+    //     const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
+    //     const eventId = queryParams.get('event'); // Extract eventId from the URL
+    //     const registrantId = safeLocalStorage.getItem('event_registrant_id'); // Get registrantId from localStorage
+    
+    //     // Function to store eventId in an array in localStorage (for multiple eventIds)
+    //     const storeEventId = (newEventId) => {
+    //         let eventIds = JSON.parse(safeLocalStorage.getItem('eventIds')) || []; // Access array of eventIds
+    //         if (!eventIds.includes(newEventId)) {
+    //             eventIds.push(newEventId);
+    //             safeLocalStorage.setItem('eventIds', JSON.stringify(eventIds)); // Store updated eventIds array
+    //         }
+    //     };
+    
+    //     // Store eventId in localStorage if present in URL
+    //     if (eventId) {
+    //         storeEventId(eventId); // Store the eventId in localStorage array
+    //     }
+    
+    //     // Handle first render issue
+    //     if (firstRender.current) {
+    //         firstRender.current = false;
+    //         return;
+    //     }
+    
+    //     // Case: User is authenticated and scans QR code
+    //     if (authStatus === 'authenticated' && eventId && registrantId && !checkInComplete) {
+    //         setIsAuthenticated(true);
+    
+    //         // Trigger the check-in only once to avoid repeated calls
+    //         checkIn(eventId, registrantId)
+    //             .then((response) => {
+    //                 if (response?.message === 'User has already checked in for this event') {
+    //                     alert('You have already checked in!');
+    //                 } else if (response) {
+    //                     alert('Check-in successful!');
+    //                 }
+    //                 setCheckInComplete(true); // Mark check-in as completed
+    //                 navigate('/profile', { replace: true });
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Check-in error:", error);
+    //             });
+    //     }
+    
+    //     // Case: User is authenticated and no eventId (login without check-in)
+    //     else if (authStatus === 'authenticated' && !eventId && !checkInComplete) {
+    //         setIsAuthenticated(true);
+    //         navigate('/profile', { replace: true });
+    //     }
+    
+    //     // Case: User is not authenticated and scans QR code 
+    //     else if (!authStatus && eventId) {
+    //         if (location.pathname !== '/auth-options') {
+    //             navigate('/auth-options'); // Redirect to Login/Register prompt screen
+    //         }
+    //     }
+    
+    //     // Case: User is not authenticated and visits the root path (/) without an event 
+    //     else if (!authStatus && !eventId && location.pathname === '/') {
+    //         navigate('/auth-options'); // Redirect to Login/Register if no eventId
+    //     }
+    // }, [location.search, checkInComplete, checkIn]);
     useEffect(() => {
         const authStatus = safeLocalStorage.getItem('event_authentication_status'); // Get authentication status from localStorage
         const queryParams = new URLSearchParams(location.search); // Get query parameters from the URL
